@@ -120,6 +120,10 @@ jobs:
           with open(release_entry_file, 'r') as f:
               release_entry = f.read()
 
+          # Extract tag name from release entry (e.g., "v1.0.0" from "## [v1.0.0](...)")
+          tag_match = re.search(r'## \[([^\]]+)\]', release_entry)
+          tag_name = tag_match.group(1) if tag_match else ''
+
           # Read releases.md
           with open(releases_file, 'r') as f:
               content = f.read()
@@ -128,6 +132,15 @@ jobs:
           latest_pattern = r'(## Latest Release\n\n)(<!--.*?-->\n\n)(---)'
           latest_replacement = r'\1' + release_entry + r'\3'
           content = re.sub(latest_pattern, latest_replacement, content, flags=re.DOTALL)
+
+          # Handle Release History section
+          # First, remove any existing entries for this tag to prevent duplicates
+          if tag_name:
+              # Pattern to match a release entry (from ## to next ## or ---)
+              # Matches: ## [tag_name](url) - date\n\n**[Download](url)** | [Release Notes](url)\n\n
+              escaped_tag = re.escape(tag_name)
+              duplicate_pattern = r'## \[{}\]\([^\)]+\) - [^\n]+\n\n\*\*\[Download\]\([^\)]+\)\*\* \| \[Release Notes\]\([^\)]+\)\n\n'.format(escaped_tag)
+              content = re.sub(duplicate_pattern, '', content, flags=re.MULTILINE)
 
           # Add to Release History section - insert after heading, before existing entries
           history_pattern = r'(## Release History\n\n)(<!--.*?-->\n\n)'
