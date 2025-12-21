@@ -44,18 +44,23 @@ Before proceeding, verify:
    - **Obtain CloudId for Atlassian Tools:**
      - Use `mcp_Atlassian-MCP-Server_getAccessibleAtlassianResources` to get cloudId
      - Use the first result or match by site name
-     - **Error Handling**: If cloudId cannot be determined, STOP and report: "Unable to determine Atlassian cloudId. Please verify MCP configuration."
-   - **Fetch task from Jira:**
-     - Use `mcp_Atlassian-MCP-Server_getJiraIssue` with `cloudId` and `issueIdOrKey` = {TASK_KEY}
-     - Extract: title, description, acceptance criteria, labels, components, current story points, status, project key
-   - **Verify task is in refinable state:**
-     - Check status is not "Done" or "Completed"
-     - **If task is completed, STOP and report: "Task {TASK_KEY} is already completed and cannot be refined."**
-   - **Extract task details:**
-     - Title, description, acceptance criteria (if present)
-     - Labels, components
-     - Current story points (if any)
-     - Project key (for historical queries)
+          - **Error Handling**: If cloudId cannot be determined, STOP and report: "Unable to determine Atlassian cloudId. Please verify MCP configuration."
+       - **Fetch task from Jira:**
+         - Use `mcp_Atlassian-MCP-Server_getJiraIssue` with `cloudId` and `issueIdOrKey` = {TASK_KEY}
+         - Extract: title, description, acceptance criteria, labels, components, status, project key
+         - **Read Story Points field:**
+           - Story Points field identifier: `customfield_10036` (Story Points field in this Jira instance)
+           - Read value from `fields.customfield_10036`
+           - Field may be null/undefined if not yet set - this is expected for unestimated tasks
+           - **Note**: If `customfield_10036` is not present in the response, the project may not have Story Points configured (e.g., simplified projects). In this case, skip story point estimation but continue with task refinement.
+       - **Verify task is in refinable state:**
+         - Check status is not "Done" or "Completed"
+         - **If task is completed, STOP and report: "Task {TASK_KEY} is already completed and cannot be refined."**
+       - **Extract task details:**
+         - Title, description, acceptance criteria (if present)
+         - Labels, components
+         - Current story points: Read from `fields.customfield_10036` (may be null if not set, or field may not exist if project doesn't have Story Points configured)
+         - Project key (for historical queries)
 
 2. **Determine Board Type**
    - **Detect if project uses Scrum or Kanban:**
@@ -73,17 +78,17 @@ Before proceeding, verify:
    - **Build JQL query:**
      - **Scrum JQL:**
        ```
-       project = {PROJECT_KEY} 
-       AND status IN ("Done", "Completed") 
-       AND "Story Points" > 0 
+       project = {PROJECT_KEY}
+       AND status IN ("Done", "Completed")
+       AND "Story Points" > 0
        AND resolved >= startOfWeek("-18w")
        ORDER BY resolved DESC
        ```
      - **Kanban JQL:**
        ```
-       project = {PROJECT_KEY} 
-       AND status IN ("Done", "Completed") 
-       AND "Story Points" > 0 
+       project = {PROJECT_KEY}
+       AND status IN ("Done", "Completed")
+       AND "Story Points" > 0
        AND resolved >= -3m
        ORDER BY resolved DESC
        ```
@@ -127,7 +132,28 @@ Before proceeding, verify:
        - Note: "Few similar tasks found, using description/AC analysis for estimation"
        - Proceed with description/AC analysis path
 
-5. **Analyze Story Points**
+5. **Make Common Sense Estimate First**
+   - **Analyze task type and work nature:**
+     - Identify what type of work this is (coding, documentation, configuration, etc.)
+     - **Key distinction**: Documentation/markdown editing vs. code development
+     - Recognize that documentation tasks (markdown files, README updates, etc.) are typically 1-2 points
+     - Recognize that code development tasks require more estimation based on complexity
+   - **Make initial common sense estimate based on work type:**
+     - **Documentation/Markdown editing**: 1 point (editing existing files, adding sections)
+     - **Simple code changes**: 1-2 points (small fixes, single file changes)
+     - **Moderate development**: 2-3 points (new features, multiple files, some complexity)
+     - **Complex development**: 3-5 points (significant features, integrations, multiple components)
+     - **Very complex**: 5-8 points (architecture changes, major refactoring, complex integrations)
+   - **Consider work scope:**
+     - Number of files to modify
+     - Amount of code to write
+     - Testing requirements
+     - Integration complexity
+   - **Generate initial estimate:**
+     - Round to nearest Fibonacci value (1, 2, 3, 5, 8, 13, 21)
+     - Store as baseline estimate
+
+6. **Validate/Adjust with Similar Tasks** (if historical data available)
    - **If similar tasks found (≥2):**
      - Extract story points from similar tasks
      - Calculate statistics:
@@ -135,37 +161,27 @@ Before proceeding, verify:
        - **Median**: Middle value when sorted
        - **Average**: Mean of all story point values
        - **Range**: Min and max values
-     - **Consider task complexity factors:**
-       - Compare description length to similar tasks
-       - Compare acceptance criteria count
-       - Note any significant scope differences
-     - **Generate estimate:**
-       - Prefer mode if clear pattern exists (mode appears 2+ times)
-       - Use median if mode is unclear or ties exist
+     - **Compare to common sense estimate:**
+       - If similar tasks average is close (±1 point): Keep or slightly adjust common sense estimate
+       - If similar tasks average differs significantly: Consider adjusting, but maintain common sense bounds
+       - Don't blindly follow historical data if it contradicts common sense
+     - **Final estimate:**
+       - Prefer common sense estimate if historical data is limited or questionable
+       - If historical pattern is clear and strong (5+ tasks, low variance), use historical average
        - Round to nearest Fibonacci value (1, 2, 3, 5, 8, 13, 21)
-       - Consider complexity adjustments (±1 point if significantly different)
      - **Determine confidence level:**
-       - High: 5+ similar tasks, clear pattern, low variance
-       - Medium: 2-4 similar tasks, reasonable pattern
-       - Low: 2 similar tasks, high variance
+       - High: Common sense estimate + 5+ similar tasks with clear pattern, estimates aligned
+       - Medium: Common sense estimate + 2-4 similar tasks, reasonable alignment
+       - Low: Common sense estimate only (no similar tasks found), or conflicting historical data
    - **If no/few similar tasks found (<2):**
-     - **Analyze task description and acceptance criteria:**
-       - Count description words (longer = more complex)
-       - Count acceptance criteria (more criteria = more complex)
-       - Identify technical complexity indicators:
-         - Technical terms (API, database, integration, etc.)
-         - Scope words (all, entire, complete, etc.)
-         - Dependency indicators (requires, depends on, etc.)
-       - **Estimate based on complexity indicators:**
-         - Simple task (short desc, 1-2 AC): 1-3 points
-         - Moderate task (medium desc, 3-5 AC): 3-5 points
-         - Complex task (long desc, 5+ AC, technical): 5-8 points
-         - Very complex (very long, many AC, integrations): 8-13 points
-       - Round to nearest Fibonacci value
+     - **Use common sense estimate:**
+       - Rely on the initial common sense estimate made in Step 5
+       - Document that no historical data was available for validation
      - **Lower confidence level:**
-       - Set confidence to "Low" when using description/AC analysis
+       - Set confidence to "Low" when only using common sense estimate
+       - Note that estimate will improve as project accumulates historical data
 
-6. **Refine Task Content** (Conservative approach)
+7. **Refine Task Content** (Conservative approach)
    - **Analyze description completeness:**
      - Compare current description to similar tasks
      - Identify if description is significantly shorter or less detailed
@@ -196,10 +212,11 @@ Before proceeding, verify:
      - Only enhance, never replace
      - Maintain original structure and style
 
-7. **Check Existing Story Points**
+8. **Check Existing Story Points**
    - **Check if task already has story points:**
-     - Read story points field from task data
-     - If story points field is null or 0, treat as "no existing points"
+     - Read story points from `fields.customfield_10036` (from task data fetched in Step 1)
+     - If `customfield_10036` is null, undefined, or 0, treat as "no existing points"
+     - If `customfield_10036` has a numeric value, store as existing points
    - **Compare new estimate to existing points:**
      - If no existing points: Proceed with update
      - If existing points match new estimate: Proceed with update (confirm in report)
@@ -208,38 +225,39 @@ Before proceeding, verify:
        - Store both values for report
        - Note: "Existing points ({existing}) differ from estimate ({new}). Preserving existing points. Please review."
 
-8. **Update Task in Jira**
-   - **Prepare update fields:**
-     - Story points: Only update if no existing points OR estimates match
-     - Description: Only if conservatively refined (minimal changes)
-     - Acceptance criteria: Only if conservatively refined (minimal additions)
-   - **Update task:**
-     - Use `mcp_Atlassian-MCP-Server_editJiraIssue` with:
-       - `cloudId`
-       - `issueIdOrKey` = {TASK_KEY}
-       - `fields`: Object with fields to update
-         - Story points field (if updating)
-         - Description (if refined)
-         - Acceptance criteria (if refined)
+9. **Update Task in Jira**
+       - **Prepare update fields:**
+         - Story points: Only update if no existing points OR estimates match
+         - Description: Only if conservatively refined (minimal changes)
+         - Acceptance criteria: Only if conservatively refined (minimal additions)
+       - **Update task:**
+         - Use `mcp_Atlassian-MCP-Server_editJiraIssue` with:
+           - `cloudId`
+           - `issueIdOrKey` = {TASK_KEY}
+           - `fields`: Object with fields to update
+             - Story Points: `{ "customfield_10036": <estimate_value> }` (numeric value)
+             - Description (if refined): `{ "description": { "type": "doc", "version": 1, "content": [...] } }`
+             - Acceptance criteria (if refined): Update within description or use appropriate field
+         - **Note**: `customfield_10036` is the Story Points field identifier for this Jira instance
    - **Preserve all other fields:**
      - Do not modify labels, components, links, assignee, etc.
    - **Verify update succeeded:**
      - Re-fetch task to confirm changes were applied
 
-9. **Generate and Post Report**
+10. **Generate and Post Report**
    - **Create markdown report:**
      - **Header**: "## Refinement Report for {TASK_KEY}"
      - **Story Points Estimate:**
        - If no existing points: "Estimated story points: **{estimate}**"
        - If existing points differ: "Existing story points: **{existing}** (preserved)\nEstimated story points: **{new_estimate}**\n\n⚠️ Estimates differ. Please review."
        - If estimates match: "Estimated story points: **{estimate}** (matches existing)"
-     - **Justification:**
-       - If similar tasks found: "Based on {count} similar completed tasks:"
-         - List top 3-5 similar tasks with links and their story points
-         - Show statistics (mode, median, average, range)
-       - If using description/AC analysis: "Based on task description and acceptance criteria analysis:"
-         - Note complexity indicators used
-         - Explain estimation reasoning
+            - **Justification:**
+              - **Common Sense Estimate:** "Initial estimate: {common_sense_estimate} points (based on work type: {work_type})"
+              - If similar tasks found: "Validated against {count} similar completed tasks:"
+                - List top 3-5 similar tasks with links and their story points
+                - Show statistics (mode, median, average, range)
+                - Note if historical data aligned with or adjusted the common sense estimate
+              - If no similar tasks: "No historical data available for validation. Estimate based on common sense analysis of work type and scope."
      - **Similar Tasks Found:**
        - List top 5 similar tasks (if found):
          - Format: `- [{KEY}]({URL}): {title} ({story_points} points)`
@@ -249,9 +267,9 @@ Before proceeding, verify:
        - If acceptance criteria added: "- Added {count} acceptance criteria"
        - If no refinements: "- No refinements needed (task already well-defined)"
      - **Confidence Level:**
-       - High: "High confidence estimate based on {count} similar tasks with clear patterns"
-       - Medium: "Medium confidence estimate based on {count} similar tasks"
-       - Low: "Low confidence estimate (few similar tasks found, using description/AC analysis)"
+       - High: "High confidence estimate based on common sense analysis validated against {count} similar tasks with clear patterns"
+       - Medium: "Medium confidence estimate based on common sense analysis validated against {count} similar tasks"
+       - Low: "Low confidence estimate (common sense estimate only, no historical data available for validation)"
      - **Next Steps:**
        - If existing points preserved: "Please review the estimate difference and update story points manually if needed."
        - Otherwise: "Task refined and ready for sprint planning."
@@ -278,13 +296,15 @@ Before proceeding, verify:
   - **Error Handling**: If cloudId cannot be determined, STOP and report: "Unable to determine Atlassian cloudId. Please verify MCP configuration."
 - `mcp_Atlassian-MCP-Server_getJiraIssue` - Fetch task to refine
   - Parameters: `cloudId`, `issueIdOrKey` = {TASK_KEY}
-  - Extract: title, description, acceptance criteria, labels, components, story points, status, project key
+  - Extract: title, description, acceptance criteria, labels, components, status, project key
+  - Story Points: Read from `fields.customfield_10036` (may be null if not set)
 - `mcp_Atlassian-MCP-Server_searchJiraIssuesUsingJql` - Query historical completed tasks
   - Parameters: `cloudId`, `jql` = (see JQL examples in Steps), `maxResults` = 100
   - Returns: List of completed tasks with story points
 - `mcp_Atlassian-MCP-Server_editJiraIssue` - Update task (story points, description, acceptance criteria)
   - Parameters: `cloudId`, `issueIdOrKey` = {TASK_KEY}, `fields` = object with fields to update
-  - **Note**: Only update if conditions met (no existing points or estimates match)
+  - Story Points field: `customfield_10036` (Story Points field identifier for this Jira instance)
+  - **Note**: Only update story points if conditions met (no existing points or estimates match)
 - `mcp_Atlassian-MCP-Server_addCommentToJiraIssue` - Post refinement report
   - Parameters: `cloudId`, `issueIdOrKey` = {TASK_KEY}, `commentBody` = markdown report
 
@@ -316,14 +336,15 @@ Before proceeding, verify:
 Act as a **Scrum Master, Product Manager, or Team Lead** responsible for backlog refinement. You are analytical, data-driven, and focused on improving task clarity and estimate accuracy.
 
 ### Instruction
-Execute the refine-task workflow to improve a task by analyzing historical work, estimating story points based on similar completed tasks, and conservatively enhancing task details. This helps ensure tasks are well-defined and accurately estimated before sprint planning.
+Execute the refine-task workflow to improve a task by making a common sense estimate first, then validating/adjusting with historical similar tasks if available, and conservatively enhancing task details. This helps ensure tasks are well-defined and accurately estimated before sprint planning.
 
 ### Context
 - Tasks need refinement before sprint planning to ensure clarity and accurate estimation
-- Historical data from completed tasks provides valuable context for realistic estimates
+- Common sense estimation comes first - recognize work type (documentation vs. code development) and make reasonable initial estimate
+- Historical data from completed tasks provides valuable validation - use to confirm or adjust common sense estimate
 - Team-level patterns (not individual assignment) are considered - learn from any team member's work
 - Conservative refinement approach preserves existing content while filling critical gaps
-- Story point estimates should be based on actual historical data when possible
+- Story point estimates should prioritize common sense, validated by historical data when available
 
 ### Examples
 
@@ -333,6 +354,7 @@ Execute the refine-task workflow to improve a task by analyzing historical work,
 Input: /refine-task FB-123
 
 Task: "Add user authentication"
+Common sense estimate: 5 points (moderate development - authentication features typically moderate complexity)
 Similar tasks found: 8 similar authentication-related tasks
 - FB-45: "Implement OAuth login" (5 points)
 - FB-67: "Add SSO support" (5 points)
@@ -340,39 +362,57 @@ Similar tasks found: 8 similar authentication-related tasks
 ...
 
 Output:
-- Estimated: 5 story points (mode of similar tasks)
-- Confidence: High (8 similar tasks, clear pattern)
+- Estimated: 5 story points (common sense estimate validated by similar tasks - mode: 5 points)
+- Confidence: High (common sense + 8 similar tasks, clear pattern, estimates aligned)
 - Similar tasks listed with links
 - Minimal refinements (task already well-defined)
 ```
 
-**Example 2: Task with Few Similar Tasks**
+**Example 2: Documentation Task (Common Sense Primary)**
 
 ```
 Input: /refine-task FB-124
 
-Task: "Create new reporting dashboard"
-Similar tasks found: 1 similar task
-- FB-78: "Build analytics page" (8 points)
+Task: "Update README.md with new command documentation"
+Common sense estimate: 1 point (documentation/markdown editing - simple task)
+Similar tasks found: 2 similar documentation tasks
+- FB-56: "Update API documentation" (1 point)
+- FB-78: "Add user guide section" (1 point)
 
 Output:
-- Estimated: 8 story points (based on similar task, adjusted for complexity)
-- Confidence: Medium (1 similar task)
-- Used description/AC analysis to supplement
-- Added 1 acceptance criterion based on similar task pattern
+- Estimated: 1 story point (common sense estimate validated by similar tasks)
+- Confidence: Medium (common sense + 2 similar tasks, estimates aligned)
+- Minimal refinements needed
 ```
 
-**Example 3: Task with Existing Story Points**
+**Example 3: Task with Few Similar Tasks**
 
 ```
 Input: /refine-task FB-125
 
-Task: "Refactor payment service" (existing: 3 points)
-Estimated: 5 points (based on 6 similar refactoring tasks)
+Task: "Create new reporting dashboard"
+Common sense estimate: 5 points (complex development - dashboard with multiple components)
+Similar tasks found: 1 similar task
+- FB-78: "Build analytics page" (8 points)
 
 Output:
-- Existing points: 3 (preserved)
-- Estimated: 5 points
+- Estimated: 5 story points (common sense estimate, validated against 1 similar task which suggests 8 points, but kept common sense estimate due to limited data)
+- Confidence: Medium (common sense primary, 1 similar task for reference)
+- Added 1 acceptance criterion based on similar task pattern
+```
+
+**Example 4: Task with Existing Story Points**
+
+```
+Input: /refine-task FB-126
+
+Task: "Refactor payment service" (existing: 3 points)
+Common sense estimate: 5 points (moderate complexity - refactoring existing service)
+Validated against: 6 similar refactoring tasks (average: 5 points)
+
+Output:
+- Existing points: 3 (preserved - differs from estimate)
+- Estimated: 5 points (common sense + historical validation)
 - ⚠️ Estimates differ. Please review.
 - Listed similar tasks for comparison
 ```
