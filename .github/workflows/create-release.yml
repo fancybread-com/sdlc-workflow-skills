@@ -128,10 +128,17 @@ jobs:
           with open(releases_file, 'r') as f:
               content = f.read()
 
-          # Update Latest Release section - replace comment with actual release entry
+          # Update Latest Release section - replace comment or existing entry with actual release entry
+          # Try pattern with comment first
           latest_pattern = r'(## Latest Release\n\n)(<!--.*?-->\n\n)(---)'
           latest_replacement = r'\1' + release_entry + r'\3'
           content = re.sub(latest_pattern, latest_replacement, content, flags=re.DOTALL)
+
+          # If no comment pattern matched, replace entire section (removes old entries)
+          if not re.search(latest_pattern, content, flags=re.DOTALL):
+              # Pattern to match from "## Latest Release" to "---" separator
+              latest_replace_pattern = r'(## Latest Release\n\n).*?(\n---)'
+              content = re.sub(latest_replace_pattern, r'\1' + release_entry + r'\2', content, flags=re.DOTALL)
 
           # Handle Release History section
           # First, remove any existing entries for this tag to prevent duplicates
