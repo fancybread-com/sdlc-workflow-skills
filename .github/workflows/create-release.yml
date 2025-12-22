@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch all history for changelog
-          ref: main  # Checkout main branch for documentation updates
+          ref: ${{ github.ref }}  # Checkout the tag that triggered the workflow
 
       - name: Extract version from tag
         id: tag
@@ -64,21 +64,32 @@ jobs:
       - name: Create implementations archives
         id: archive
         run: |
+          set -e
           TAG_NAME=${GITHUB_REF#refs/tags/}
           TAR_NAME="commands-${TAG_NAME}.tar.gz"
           ZIP_NAME="commands-${TAG_NAME}.zip"
 
-          # Create tar.gz archive with contents of implementations folder (not the folder itself)
-          tar -czf "$TAR_NAME" -C implementations .
+          if [ ! -d "implementations" ]; then
+            echo "Error: implementations folder not found"
+            exit 1
+          fi
 
-          # Create zip archive with contents of implementations folder (not the folder itself)
+          tar -czf "$TAR_NAME" -C implementations .
+          if [ ! -f "$TAR_NAME" ]; then
+            echo "Error: Failed to create $TAR_NAME"
+            exit 1
+          fi
+
           cd implementations
-          zip -r "../$ZIP_NAME" .
+          zip -r "../$ZIP_NAME" . > /dev/null
           cd ..
+          if [ ! -f "$ZIP_NAME" ]; then
+            echo "Error: Failed to create $ZIP_NAME"
+            exit 1
+          fi
 
           echo "tar_name=$TAR_NAME" >> $GITHUB_OUTPUT
           echo "zip_name=$ZIP_NAME" >> $GITHUB_OUTPUT
-          echo "Created archives: $TAR_NAME and $ZIP_NAME"
 
       - name: Create GitHub Release
         id: release
@@ -95,25 +106,29 @@ jobs:
 
       - name: Remove auto-generated source archives
         run: |
+          set -e
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"  # Extract repo name (e.g., "agentic-software-development")
-          VERSION="${TAG_NAME#v}"  # Remove 'v' prefix (e.g., "1.0.0")
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          VERSION="${TAG_NAME#v}"
 
-          # GitHub automatically creates source code archives with pattern: {repo-name}-{version}.{ext}
-          # We want to remove these, keeping only our custom "commands-{version}.{ext}" archives
-          echo "Checking for auto-generated source archives to remove..."
+          ASSETS_TO_REMOVE=$(gh release view "$TAG_NAME" --json assets | \
+            jq -r --arg pattern "^${REPO_NAME}-${VERSION}" '.assets[] | select(.name | test($pattern)) | .name' || echo "")
 
-          # Get list of auto-generated assets and remove them
-          gh release view "$TAG_NAME" --json assets | \
-            jq -r --arg pattern "^${REPO_NAME}-${VERSION}" '.assets[] | select(.name | test($pattern)) | .name' | \
-            while IFS= read -r asset; do
+          if [ -n "$ASSETS_TO_REMOVE" ]; then
+            echo "$ASSETS_TO_REMOVE" | while IFS= read -r asset; do
               if [ -n "$asset" ]; then
-                echo "Removing auto-generated archive: $asset"
                 gh release delete-asset "$TAG_NAME" "$asset" --yes || true
               fi
             done
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout main for documentation update
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update releases documentation
         run: |
