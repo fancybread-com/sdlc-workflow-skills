@@ -15,7 +15,7 @@ All releases of the Agentic Software Development commands library.
 
 ## Release History
 
-## [v1.0.0](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0) - 2025-12-21
+## [v1.0.0](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0) - 2025-12-22
 
 **[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0)
 
