@@ -50,7 +50,7 @@ cp -r implementations/cursor/commands/* ~/.cursor/commands/
 
 ```
 /create-task --type=story for user authentication
-/generate-implementation-plan for PROJ-123
+/create-plan for PROJ-123
 /start-task PROJ-123
 /complete-task PROJ-123
 ```

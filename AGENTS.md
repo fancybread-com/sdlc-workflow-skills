@@ -98,13 +98,13 @@ Documentation **MUST**:
 | **Create Work** | `/create-task --type=<type> for <description>` | Types: epic, story, bug, task. Adapts workflow by type |
 | **Decompose Epic** | `/decompose-task <TASK-ID>` | Break epics into stories. Validates info density (5 elements) |
 | **Refine Backlog** | `/refine-task <TASK-ID>` | Add detail, estimate story points. Uses historical data |
-| **Plan Feature** | `/create-plan for <TASK-ID>` | Create technical implementation plan. Outputs to `.plans/` |
+| **Plan Feature** | `/create-plan for <TASK-ID>` | Create spec (permanent) or plan (transient). Outputs to `specs/` or `.plans/` |
 | **Start Work** | `/start-task <TASK-ID>` | Create branch, transition to "In Progress", implement per plan |
 | **Complete Work** | `/complete-task <TASK-ID>` | Commit, push, create PR. Link to story |
 | **Write Tests** | `/create-test --type=<type> for <component>` | Types: unit, integration, e2e. Adapts for backend/frontend |
 | **Review Code** | `/review-code for PR #<number>` | AI code review. Checks against spec and best practices |
 
-**Workflow:** `/create-task` → `/decompose-task` → `/refine-task` → `/create-plan` → `/start-task` → `/complete-task` → `/review-code`
+**Workflow:** `/create-task` → `/decompose-task` → `/refine-task` → `/create-plan` (creates spec/plan) → `/start-task` → `/complete-task` → `/review-code`
 
 ---
 
@@ -395,7 +395,7 @@ graph LR
 
 - `/decompose-task` requires task with sufficient info density (5 elements)
 - `/refine-task` requires task to exist and not be "Done"
-- `/start-task` requires plan file (`.plans/{TASK_KEY}-*.plan.md`) or acceptance criteria
+- `/start-task` requires spec (`specs/{FEATURE_DOMAIN}/spec.md`) or plan (`.plans/{TASK_KEY}-*.plan.md`) or acceptance criteria
 - `/complete-task` requires uncommitted changes and task in "In Progress"
 - `/review-code` requires PR number or branch name
 
