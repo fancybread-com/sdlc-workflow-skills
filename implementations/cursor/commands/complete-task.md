@@ -9,7 +9,10 @@ Commit changes, push to remote, create pull request, and transition issue to "Co
 - **Branch Name Format**: Use short format `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
   - Short format is recommended: `feat/FB-6` (not `feat/FB-6-file-watching-workspace-commands`)
   - **Important**: Be consistent within a project - use the same format for all branches
-- **Plan Summary**: Content from the plan file located at `.plans/{TASK_KEY}-*.plan.md`
+- **Spec Summary**: Content from spec file located at `specs/{FEATURE_DOMAIN}/spec.md`
+  - Contains Blueprint (Context, Architecture, Anti-Patterns) and Contract (DoD, Guardrails, Scenarios)
+  - Used in PR body to document feature contracts
+- **Plan Summary**: Content from plan file located at `.plans/{TASK_KEY}-*.plan.md`
   - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
     - Use the most recently modified file (check file modification time)
     - If modification time cannot be determined, use the first file found alphabetically
@@ -36,13 +39,20 @@ Before proceeding, verify:
    - Run all tests locally and verify they pass
    - **If any tests fail, STOP and fix them before proceeding. Do not commit failing tests.**
 
-4. **Plan File**:
-   - Verify plan file exists at `.plans/{TASK_KEY}-*.plan.md`
+4. **Documentation Files**:
+   - Check if spec exists at `specs/{FEATURE_DOMAIN}/spec.md`
+   - Check if plan exists at `.plans/{TASK_KEY}-*.plan.md`
    - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
      - Use the most recently modified file (check file modification time)
      - If modification time cannot be determined, use the first file found alphabetically
      - Report which file was selected: "Using plan file: {filename}"
-   - **If no plan file found, STOP and report error**: "Plan file not found for {TASK_KEY}. Please run `/create-plan {TASK_KEY}` first to generate the implementation plan."
+   - **If neither spec nor plan exists, WARN but proceed**: PR will not include detailed context
+   
+5. **Verify Spec Updated (if applicable)**:
+   - If code changes affected API contracts, data models, or quality targets:
+     - **Check if spec was updated** in the staged changes
+     - If spec exists but wasn't updated: WARN user about Same-Commit Rule violation
+     - **Strongly recommend** including spec update in this commit
 
 ## Steps
 
@@ -73,14 +83,14 @@ Before proceeding, verify:
    - **After pushing, get the latest commit SHA:**
      - Use `run_terminal_cmd`: `git rev-parse HEAD` to get current commit SHA
      - Or use `mcp_github_list_commits` with `sha` = branch name to get latest commit
-   - **Read plan summary from `.plans/{TASK_KEY}-*.plan.md`:**
-     - Extract the following sections for PR body:
-       - **Story**: User story or description
-       - **Context**: Background and motivation (1-2 paragraphs)
-       - **Scope**: In Scope and Out of Scope items (bullet list)
-       - **Acceptance Criteria**: Numbered list
-       - **Implementation Steps**: Summary of key steps (3-5 bullets)
-     - Format as markdown in PR body
+   - **Read documentation for PR body:**
+     - **First, check for Spec** at `specs/{FEATURE_DOMAIN}/spec.md`:
+       - If exists, extract: Context (from Blueprint), Definition of Done (from Contract), key scenarios
+       - Include in PR body as "Feature Spec" section
+     - **Then, check for Plan** at `.plans/{TASK_KEY}-*.plan.md`:
+       - If exists, extract: Story, Context, Scope, Acceptance Criteria, Implementation Steps summary
+       - Include in PR body as "Implementation Plan" section
+     - **If neither exists**: Note in PR body that no detailed documentation was found
    - **Check if PR already exists:**
      - Use `mcp_github_pull_request_read` with `method="get"` to check for existing PRs
      - If PR exists, update it instead of creating new one
@@ -91,6 +101,7 @@ Before proceeding, verify:
      - [x] Plan reviewed and implemented
      - [x] Code changes completed
      - [x] Unit tests written and passing
+     - [x] Spec updated (if behavior changed)
      - [x] Documentation updated
      - [x] Linting errors fixed
      - [x] All tests passing locally
@@ -102,7 +113,8 @@ Before proceeding, verify:
    - Create PR with:
      - Title: `{type}: {description} ({TASK_KEY})` (matching commit message)
      - Body should include:
-       - Plan summary (extracted sections from `.plans/{TASK_KEY}-*.plan.md`)
+       - Feature Spec summary (if spec exists) with Blueprint context and Contract DoD
+       - Implementation Plan summary (if plan exists) with extracted sections
        - Note: "CI/CD checks will run automatically on this PR"
        - Link to the issue
      - Set base branch (typically `main` or `develop`)
@@ -170,10 +182,12 @@ Before proceeding, verify:
   - Parameters: `owner`, `repo`, `pullNumber`, `method` = "get_status"
 
 ### Filesystem Tools
-- `glob_file_search` - Find plan files matching `.plans/{TASK_KEY}-*.plan.md`
-  - Pattern: `**/.plans/{TASK_KEY}-*.plan.md`
-- `read_file` - Read plan file content for PR body
-  - Parameters: `target_file` = `.plans/{TASK_KEY}-{description}.plan.md`
+- `glob_file_search` - Find specs matching `specs/{FEATURE_DOMAIN}/spec.md` or plans matching `.plans/{TASK_KEY}-*.plan.md`
+  - Pattern for plans: `**/.plans/{TASK_KEY}-*.plan.md`
+  - Pattern for specs: `**/specs/*/spec.md`
+- `read_file` - Read spec/plan file content for PR body
+  - Spec location: `specs/{FEATURE_DOMAIN}/spec.md`
+  - Plan location: `.plans/{TASK_KEY}-{description}.plan.md`
 - `read_lints` - Check for linting errors
   - Parameters: `paths` = array of file paths or directories
 
@@ -192,7 +206,8 @@ Before proceeding, verify:
 - [ ] MCP status validation performed
 - [ ] Current branch verified (matches `{type}/{TASK_KEY}` format)
 - [ ] All tests passing locally
-- [ ] Plan file found and readable
+- [ ] Documentation files checked (spec and/or plan)
+- [ ] Spec updated if behavior changed (Same-Commit Rule)
 - [ ] Linting errors fixed
 - [ ] Changes staged
 - [ ] Commit message follows convention
@@ -201,7 +216,7 @@ Before proceeding, verify:
 - [ ] PR created (optional - may be skipped)
 - [ ] If PR created: CI/CD checks running (as PR gate)
 - [ ] Completed checklist added to issue
-- [ ] If PR created: PR created with plan summary
+- [ ] If PR created: PR created with spec/plan summary
 - [ ] If PR created: PR linked to issue
 - [ ] If PR created: PR link added to issue comment
 - [ ] Issue updated with status (PR link or commit/push confirmation)
@@ -222,11 +237,13 @@ Execute the complete-task workflow to finalize development work on a specified t
 
 ### Context
 - The task is tracked in an issue management system (Jira, Azure DevOps, etc.)
-- A plan document exists at `.plans/{TASK_KEY}-*.plan.md` with implementation details
+- **Specs** may exist at `specs/{FEATURE_DOMAIN}/spec.md` with permanent feature contracts
+- **Plans** may exist at `.plans/{TASK_KEY}-*.plan.md` with transient implementation details
 - Development work has been completed on a branch following the `{type}/{TASK_KEY}` format
 - MCP integrations provide access to issue trackers and version control
 - Automated CI/CD pipelines run checks on pushed branches
 - The codebase follows conventional commit standards and branch naming conventions
+- **Same-Commit Rule**: Spec updates must be committed with code changes that affect behavior/contracts
 
 ### Examples
 
@@ -251,8 +268,32 @@ Execute the complete-task workflow to finalize development work on a specified t
 ## Summary
 Implements user authentication feature as specified in PROJ-123.
 
-## Plan Summary
-[Content from .plans/PROJ-123-*.plan.md]
+## Feature Spec
+[If spec exists at specs/user-authentication/spec.md]
+
+### Context
+User authentication is required to secure access to the application. OAuth2 provides a standard, secure authentication method.
+
+### Definition of Done
+- [ ] User can log in using OAuth2
+- [ ] Session persists for 24 hours
+- [ ] Failed attempts are logged
+- [ ] Tests pass and coverage maintained
+
+### Key Scenarios
+- **Given** user has valid OAuth2 credentials
+- **When** user attempts login
+- **Then** session is created and user is authenticated
+
+## Implementation Plan
+[If plan exists at .plans/PROJ-123-*.plan.md]
+
+### Implementation Steps
+1. Set up OAuth2 library and configuration
+2. Implement AuthService for OAuth2 flow
+3. Create SessionManager for session handling
+4. Add AuthMiddleware for request validation
+5. Create login/logout API endpoints
 
 ## Verification Status
 - ✅ Build: Passing
@@ -271,6 +312,7 @@ Closes PROJ-123
 - [x] Plan reviewed and implemented
 - [x] Code changes completed
 - [x] Unit tests written and passing
+- [x] Spec updated (if behavior changed)
 - [x] Documentation updated
 - [x] Linting errors fixed
 - [x] All tests passing locally
@@ -299,33 +341,45 @@ Ready for review.
 ### Constraints
 
 **Rules (Must Follow):**
-1. **Prerequisites Must Pass**: Do not proceed if MCP validation, branch verification, or test verification fails. STOP and report the issue.
-2. **Conventional Commits**: All commits must follow the format: `{type}: {description} ({TASK_KEY})`
+1. **Same-Commit Rule Check**: If code changes affected API contracts, data models, or quality targets:
+   - Verify spec was updated in staged changes
+   - If spec exists but wasn't updated: WARN user and recommend including spec update
+   - Spec and code changes must be committed together
+2. **Prerequisites Must Pass**: Do not proceed if MCP validation, branch verification, or test verification fails. STOP and report the issue.
+3. **Conventional Commits**: All commits must follow the format: `{type}: {description} ({TASK_KEY})`
    - Valid types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`
    - Description should be clear and concise
    - Task key must be included in parentheses
-3. **Branch Naming**: Current branch must match short format `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
+4. **Branch Naming**: Current branch must match short format `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
    - Use short format: `feat/FB-6` (not descriptive format)
    - **Important**: Be consistent - use short format for all branches
-4. **Test Requirements**: All tests must pass locally before committing. Do not commit failing tests.
-5. **Linting**: All linting errors must be fixed before committing. If errors cannot be fixed automatically, STOP and ask for guidance.
-6. **PR Creation is Optional**: PR creation is optional. You may skip PR creation if you prefer to create it manually or if it's not needed. If creating PR:
+5. **Test Requirements**: All tests must pass locally before committing. Do not commit failing tests.
+6. **Linting**: All linting errors must be fixed before committing. If errors cannot be fixed automatically, STOP and ask for guidance.
+7. **PR Creation is Optional**: PR creation is optional. You may skip PR creation if you prefer to create it manually or if it's not needed. If creating PR:
    - CI/CD runs automatically after PR creation as a gate. Local tests passing is the prerequisite to PR creation. Monitor CI/CD status after PR is created.
-   - PR body must include extracted sections from `.plans/{TASK_KEY}-*.plan.md` (Story, Context, Scope, Acceptance Criteria, Implementation Steps summary). If plan file doesn't exist, note this in PR body.
-7. **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`, use the most recently modified file. Report which file was selected.
-8. **Error Handling**: If any step fails (push, PR creation, issue transition), STOP and report the specific error. Do not proceed with remaining steps.
+   - PR body should include:
+     - Feature Spec summary (if spec exists at `specs/{FEATURE_DOMAIN}/spec.md`)
+     - Implementation Plan summary (if plan exists at `.plans/{TASK_KEY}-*.plan.md`)
+     - If neither exists, note this in PR body
+8. **Documentation File Handling**:
+   - Check for both spec and plan files
+   - If neither exists, WARN but proceed (PR will lack detailed context)
+   - Prefer spec content over plan content when both exist
+9. **Error Handling**: If any step fails (push, PR creation, issue transition), STOP and report the specific error. Do not proceed with remaining steps.
 
 **Existing Standards (Reference):**
 - MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
+- Spec guidance: See `specs/README.md` for Same-Commit Rule and when to update specs
 - Branch naming: Type prefix format (`{type}/{TASK_KEY}`) as established in `start-task.md`
 - Commit message format: `{type}: {description} ({TASK_KEY})` (consistent across commands)
-- Plan file location: `.plans/{TASK_KEY}-*.plan.md` (same as `start-task.md`)
+- Documentation locations: Specs at `specs/{FEATURE_DOMAIN}/spec.md`, Plans at `.plans/{TASK_KEY}-*.plan.md`
 - Issue workflow: Tasks transition through "To Do" → "In Progress" → "Code Review" → "Done"
+- ASDLC patterns: The Spec (permanent state), The PBI (transient delta), Living Specs (Same-Commit Rule)
 
 ### Output
-1. **Committed Changes**: All changes committed with conventional commit format
+1. **Committed Changes**: All changes committed with conventional commit format (including spec updates if behavior changed)
 2. **Pushed Branch**: Branch pushed to remote repository
-3. **Pull Request (optional)**: If PR creation was chosen, PR created with plan summary, verification status, and issue link. CI/CD checks will run automatically.
+3. **Pull Request (optional)**: If PR creation was chosen, PR created with spec summary (if exists), plan summary (if exists), verification status, and issue link. CI/CD checks will run automatically.
 4. **Updated Issue**: Issue updated with completed checklist, status information (PR link if created, or commit/push confirmation if PR skipped), and transitioned to "Code Review" status
 
 All outputs should be verified and any failures should be reported immediately with specific error details.

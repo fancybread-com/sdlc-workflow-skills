@@ -133,7 +133,8 @@ AI will:
 
 **Full transparency:**
 
-- Plans in `.plans/` folder
+- Specs in `specs/` folder (permanent feature contracts)
+- Plans in `.plans/` folder (transient task implementation)
 - PRs link to stories
 - Commits include story IDs
 

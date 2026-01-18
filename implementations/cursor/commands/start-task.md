@@ -16,12 +16,18 @@ Begin development on a task with proper setup and pre-flight checks.
      - Test each configured MCP server connection
      - Verify all required integrations are authorized and operational
      - **If any MCP server fails validation, STOP and report the failure. Do not proceed.**
-   - Read plan from `.plans/{TASK_KEY}-*.plan.md`
-     - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
-       - Use the most recently modified file (check file modification time)
-       - If modification time cannot be determined, use the first file found alphabetically
-       - Report which file was selected: "Using plan file: {filename}"
-     - **If no files match, STOP and report error**: "Plan file not found for {TASK_KEY}. Please run `/create-plan {TASK_KEY}` first to generate the implementation plan."
+   - **Read relevant documents:**
+     - **First, check for Spec**: Look for related spec in `specs/{FEATURE_DOMAIN}/spec.md`
+       - If feature spec exists, read Blueprint for architectural constraints and Anti-Patterns
+       - Read Contract for Definition of Done and Regression Guardrails
+       - Specs provide permanent context for how the feature works
+     - **Then, read Plan** (if exists): Look for task plan at `.plans/{TASK_KEY}-*.plan.md`
+       - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
+         - Use the most recently modified file (check file modification time)
+         - If modification time cannot be determined, use the first file found alphabetically
+         - Report which file was selected: "Using plan file: {filename}"
+       - Plans provide transient task-level implementation steps
+       - **If no plan and no spec exist, STOP and report error**: "No plan or spec found for {TASK_KEY}. Run `/create-plan {TASK_KEY}` first."
    - Verify story is in "In Progress"
      - Fetch story status using `mcp_Atlassian-MCP-Server_getJiraIssue`
      - **If status is NOT "In Progress":**
@@ -55,23 +61,29 @@ Begin development on a task with proper setup and pre-flight checks.
      - This provides visibility that work has begun
      - Include the actual branch name created (e.g., `feat/FB-6`)
 
-3. **Implement according to plan**
-   - **Read and understand plan:**
-     - Read plan file completely
-     - Identify all files to create/modify
+3. **Implement according to spec and plan**
+   - **Read and understand documents:**
+     - **Spec (if exists)**: Review Blueprint for design constraints, read Contract for acceptance criteria
+     - **Plan (if exists)**: Review implementation steps, identify files to create/modify
      - Understand dependencies and order
    - **Analyze existing codebase:**
      - Use `codebase_search` to find related code
      - Review similar implementations for patterns
      - Understand existing test structure
    - **Implement changes:**
-     - Create new files as specified in plan
-     - Modify existing files per plan
+     - Create new files as specified
+     - Modify existing files as needed
      - Follow existing code patterns and conventions
+     - **Respect Anti-Patterns from Spec** (if spec exists)
    - **Write tests alongside code:**
      - Create test files for new code
      - Update existing tests for modified code
+     - **Use Spec's Contract scenarios** for test cases (if spec exists)
      - Ensure tests follow existing test patterns
+   - **Update Spec if behavior changes:**
+     - If code changes API contracts, data models, or quality targets → update Spec
+     - Spec updates must be committed in same commit as code changes (Same-Commit Rule)
+     - See `specs/README.md` for when to update specs
    - **Leave changes uncommitted for review:**
      - Do NOT commit changes automatically
      - Changes remain in working directory for developer review and testing
@@ -106,13 +118,14 @@ Begin development on a task with proper setup and pre-flight checks.
   - Parameters: `owner`, `repo`, `branch` = `{type}/{TASK_KEY}`, `from_branch` = `main` (or default branch)
 
 ### Filesystem Tools
-- `glob_file_search` - Find plan files matching `.plans/{TASK_KEY}-*.plan.md`
-  - Pattern: `**/.plans/{TASK_KEY}-*.plan.md`
-- `read_file` - Read plan file content
-  - Parameters: `target_file` = `.plans/{TASK_KEY}-{description}.plan.md`
-- `read_file` - Read existing code files for context
+- `glob_file_search` - Find specs matching `specs/{FEATURE_DOMAIN}/spec.md` or plans matching `.plans/{TASK_KEY}-*.plan.md`
+  - Pattern for plans: `**/.plans/{TASK_KEY}-*.plan.md`
+  - Pattern for specs: `**/specs/*/spec.md`
+- `read_file` - Read spec/plan files and existing code
+  - Spec location: `specs/{FEATURE_DOMAIN}/spec.md`
+  - Plan location: `.plans/{TASK_KEY}-{description}.plan.md`
 - `write` - Create new files
-- `search_replace` - Modify existing files
+- `search_replace` - Modify existing files (including specs when behavior changes)
 - `list_dir` - Explore directory structure
 
 ### Codebase Tools
@@ -132,7 +145,9 @@ Begin development on a task with proper setup and pre-flight checks.
 ## Pre-flight Checklist
 - [ ] MCP status validation performed (see `mcp-status.md`)
 - [ ] All MCP servers connected and authorized
-- [ ] Plan file exists and is readable
+- [ ] Relevant docs checked (spec and/or plan)
+- [ ] Spec read (if exists) - Blueprint and Contract sections
+- [ ] Plan read (if exists) - implementation steps
 - [ ] Story status is "In Progress"
 - [ ] Story assigned to current user
 - [ ] Feature branch created
@@ -140,11 +155,15 @@ Begin development on a task with proper setup and pre-flight checks.
 - [ ] Work checklist posted to issue
 
 ## Implementation Checklist
-- [ ] Requirements understood
+- [ ] Requirements understood (from spec/plan)
+- [ ] Spec Blueprint reviewed for architectural constraints (if exists)
+- [ ] Spec Contract reviewed for acceptance criteria (if exists)
+- [ ] Anti-Patterns from Spec identified (if exists)
 - [ ] Codebase context reviewed
 - [ ] Implementation in progress
 - [ ] Code changes made
-- [ ] Tests written
+- [ ] Tests written (using Contract scenarios if spec exists)
+- [ ] Spec updated if behavior changed (Same-Commit Rule)
 - [ ] Documentation updated
 - [ ] Changes ready for review and testing (uncommitted)
 
@@ -162,10 +181,13 @@ Execute the start-task workflow to begin development on a specified task. This i
 
 ### Context
 - The task is tracked in an issue management system (Jira, Azure DevOps, etc.)
-- A plan document exists at `.plans/{TASK_KEY}-*.plan.md` with implementation details
+- **Specs** may exist at `specs/{FEATURE_DOMAIN}/spec.md` with permanent feature contracts
+- **Plans** may exist at `.plans/{TASK_KEY}-*.plan.md` with transient task-level implementation steps
+- Specs define State (how feature works), Plans define Delta (what changes)
 - The task should already be in "In Progress" status and assigned to the current user
 - MCP integrations provide access to issue trackers and version control
-- The codebase may have existing patterns, conventions, and architectural decisions that should be respected
+- The codebase has existing patterns, conventions, and architectural decisions that should be respected
+- **Same-Commit Rule**: If code changes behavior/contracts, update spec in same commit
 
 ### Examples
 
@@ -194,9 +216,12 @@ Note: The branch name in the comment must match the actual branch name created (
 ### Constraints
 
 **Rules (Must Follow):**
-1. **Unit Tests Required**: All new code must have corresponding unit tests. Update existing tests or create new test files as needed.
-2. **No Automatic Commits**: Do NOT commit changes automatically. Leave changes uncommitted for developer review and testing. Committing is handled by `/complete-task`.
-3. **Branch Naming**: Use short format: `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
+1. **Read Spec First** (if exists): Check for feature spec in `specs/` and read Blueprint + Contract before implementation
+2. **Respect Anti-Patterns**: If spec exists, do NOT implement forbidden approaches listed in Anti-Patterns section
+3. **Same-Commit Rule**: If code changes API contracts, data models, or quality targets → update spec in same commit
+4. **Unit Tests Required**: All new code must have corresponding unit tests. Use Contract scenarios from spec (if exists) for test cases.
+5. **No Automatic Commits**: Do NOT commit changes automatically. Leave changes uncommitted for developer review and testing. Committing is handled by `/complete-task`.
+6. **Branch Naming**: Use short format: `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
    - Determine type prefix from task type:
      - Story → `feat/`
      - Bug → `fix/`
@@ -205,33 +230,30 @@ Note: The branch name in the comment must match the actual branch name created (
      - Default to `feat/` if task type is unclear
    - Example: Story FB-6 → `feat/FB-6` (short format, not descriptive format)
    - **Important**: Be consistent - use short format for all branches
-4. **Pre-flight Validation**: Do not proceed if:
+7. **Pre-flight Validation**: Do not proceed if:
    - **MCP status validation fails** (see `mcp-status.md` for validation steps - if any MCP server is not connected or authorized, STOP immediately)
-   - Plan file does not exist or is unreadable
+   - Neither spec nor plan exists (STOP and suggest running `/create-plan {TASK_KEY}` first)
    - Story is not in "In Progress" status
    - Story is not assigned to current user
-6. **Code Quality**:
+8. **Code Quality**:
    - Follow existing code patterns and conventions
    - Maintain or improve test coverage
-7. **Documentation**: Update relevant documentation when adding features or changing behavior
-8. **Plan File Handling**:
-   - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
-     - Use the most recently modified file (check file modification time)
-     - If modification time cannot be determined, use the first file found alphabetically
-     - Report which file was selected: "Using plan file: {filename}"
-   - If no files match, STOP and report: "Plan file not found for {TASK_KEY}. Please run `/create-plan {TASK_KEY}` first."
+9. **Documentation**: Update relevant documentation when adding features or changing behavior
 
 **Existing Standards (Reference):**
 - MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
+- Spec guidance: See `specs/README.md` for when to update specs and Same-Commit Rule
 - Branch naming: Type prefix format (`{type}/{TASK_KEY}`) as shown in current workflow
 - Test requirements: Tests written alongside code (per Implementation Checklist)
 - Commit workflow: Changes are committed in `/complete-task`, not in this command
 - Issue workflow: Tasks transition through "To Do" → "In Progress" → "Code Review" → "Done"
+- ASDLC patterns: The Spec (permanent state), The PBI (transient delta)
 
 ### Output
-1. **Development Work**: Implement the work specified in the plan:
-   - Code changes implemented according to plan (left uncommitted for review)
-   - Unit tests created or updated alongside code
+1. **Development Work**: Implement the work specified in spec/plan:
+   - Code changes implemented according to spec constraints and plan steps (left uncommitted for review)
+   - Unit tests created or updated alongside code (using Contract scenarios if spec exists)
+   - Spec updated if behavior/contracts changed (Same-Commit Rule)
    - Documentation updated as needed
    - Changes ready for developer review and testing
    - Use `/complete-task` when ready to commit, push, and optionally create a PR

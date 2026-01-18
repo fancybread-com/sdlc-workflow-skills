@@ -1,16 +1,19 @@
-# Create Plan
+# Create Spec
 
 ## Overview
-Create a detailed technical implementation plan for a story by analyzing requirements, reviewing the codebase, and generating a structured plan document.
+Create a living specification (Spec) for a feature by analyzing requirements, reviewing the codebase, and generating a Blueprint + Contract document that evolves with the code.
 
 ## Definitions
 
 - **{TASK_KEY}**: Story/Issue ID from the issue tracker (e.g., `FB-6`, `PROJ-123`, `KAN-42`)
-- **Branch Name Format**: Use short format `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
-  - Short format is recommended: `feat/FB-6` (not `feat/FB-6-file-watching-workspace-commands`)
-  - **Important**: Be consistent within a project - use the same format for all branches
-- **Plan Document**: Technical implementation plan saved at `.plans/{TASK_KEY}-{description}.plan.md`
-  - Contains story details, technical design, implementation steps, and testing strategy
+- **{FEATURE_DOMAIN}**: Kebab-case feature name (e.g., `user-authentication`, `payment-processing`, `notifications`)
+- **Spec Document**: Living specification saved at `specs/{FEATURE_DOMAIN}/spec.md`
+  - **Blueprint**: Context, Architecture, Anti-Patterns (the "why" and "how")
+  - **Contract**: Definition of Done, Regression Guardrails, Scenarios (the "what")
+  - Lives permanently with code, updated in same commit as behavior changes
+- **Plan Document** (still exists for transient task planning): Task-level implementation plan at `.plans/{TASK_KEY}-{description}.plan.md`
+  - Defines Delta (what changes) vs Spec which defines State (how it works)
+  - Created per-task, discarded after merge
 - **Story Details**: Information from issue tracker (Jira, GitHub Issues, Azure DevOps, etc.)
   - Includes title, description, acceptance criteria, and related context
 - **User Story Format**: Typically follows "As a [user type], I want [goal], so that [benefit]"
@@ -34,6 +37,12 @@ Before proceeding, verify:
    - At least 3-5 acceptance criteria
    - Context about the problem being solved
    - **If story lacks sufficient detail, STOP and ask user for clarification before proceeding.**
+
+4. **Determine Document Type**: Decide whether to create a Spec or Plan
+   - **Create Spec** when: New feature domain, architectural patterns, API contracts, data models, cross-team dependencies
+   - **Create Plan** when: Bug fix, task-level implementation details, transient work
+   - **Both** when: Feature needs permanent spec AND task needs implementation plan
+   - **If unclear, ask user: "Should I create a Spec (permanent) or Plan (transient)?"**
 
 ## Steps
 
@@ -89,10 +98,20 @@ Before proceeding, verify:
    - **If codebase analysis reveals blockers or unclear patterns, note them in the plan for discussion.**
 
 3. **Design implementation**
-   - **Break down into subtasks:**
-     - Create 3-7 logical subtasks
-     - Each subtask should be a complete, testable unit of work
-     - Order subtasks by dependencies
+   - **For Specs**: Design Blueprint + Contract structure
+     - **Blueprint**:
+       - Context: Why does this feature exist? What problem does it solve?
+       - Architecture: API contracts, data models, dependencies, dependency directions
+       - Anti-Patterns: What agents must NOT do (with rationale)
+     - **Contract**:
+       - Definition of Done: Observable success criteria (checkboxes)
+       - Regression Guardrails: Critical invariants that must never break
+       - Scenarios: Gherkin-style (Given/When/Then) behavioral specifications
+   - **For Plans**: Design task-level implementation steps
+     - Break down into subtasks (3-7 logical units)
+     - Identify files to create/modify
+     - Plan test strategy
+     - Document dependencies
    - **Identify files to create/modify:**
      - List new files to create (with paths)
      - List existing files to modify (with specific changes)
@@ -120,7 +139,77 @@ Before proceeding, verify:
      - Error messages and codes
      - Logging requirements
 
-4. **Generate plan document**
+4. **Generate document (Spec or Plan)**
+
+   ### Option A: Generate Spec Document
+
+   - **Check if spec already exists:**
+     - Ask user for `{FEATURE_DOMAIN}` (kebab-case feature name)
+     - Check if `specs/{FEATURE_DOMAIN}/spec.md` exists
+     - If exists, ask: "Spec exists. Update existing or create new?"
+   
+   - **Create spec directory and file:**
+     - Create directory: `specs/{FEATURE_DOMAIN}/`
+     - Create file: `specs/{FEATURE_DOMAIN}/spec.md`
+   
+   - **Write spec using Blueprint + Contract structure:**
+     ```markdown
+     # Feature: {Feature Name}
+
+     > **ASDLC Pattern**: [The Spec](https://asdlc.io/patterns/the-spec/)
+     > **Status**: Active | Deprecated | Superseded
+     > **Last Updated**: YYYY-MM-DD
+
+     ---
+
+     ## Blueprint
+
+     ### Context
+     [Why does this feature exist? What business problem does it solve?]
+
+     ### Architecture
+     - **API Contracts**: Endpoints, request/response formats
+     - **Data Models**: Schemas, validation rules, data structures
+     - **Dependencies**: What this depends on, what depends on this
+     - **Dependency Directions**: Inbound/outbound relationships
+
+     ### Anti-Patterns
+     - [What agents must NOT do, with rationale]
+     - [Forbidden approaches that were considered and rejected]
+
+     ---
+
+     ## Contract
+
+     ### Definition of Done
+     - [ ] [Observable success criterion 1]
+     - [ ] [Observable success criterion 2]
+     - [ ] [Observable success criterion 3]
+     - [ ] [Automated verification: tests pass, lint passes, builds successfully]
+
+     ### Regression Guardrails
+     - [Critical invariant that must never break]
+     - [Performance targets that must be maintained]
+     - [Security requirements that must hold]
+
+     ### Scenarios
+     **Scenario: {Scenario Name}**
+     - **Given**: [Precondition]
+     - **When**: [Action]
+     - **Then**: [Expected outcome]
+
+     [Additional scenarios as needed]
+     ```
+   
+   - **Post spec summary to issue tracker:**
+     - Comment should include:
+       - Link to spec file: `specs/{FEATURE_DOMAIN}/spec.md`
+       - Brief summary of Blueprint (Context, Architecture)
+       - Brief summary of Contract (Definition of Done, key scenarios)
+     - **If posting fails, note it but don't stop - spec file creation is the primary goal.**
+
+   ### Option B: Generate Plan Document (for transient task-level work)
+
    - **Create plan file at `.plans/{TASK_KEY}-{kebab-case-description}.plan.md`:**
      - **First, check if file already exists (optional - for information only):**
        - Use `glob_file_search` with pattern: `**/.plans/{TASK_KEY}-*.plan.md`
@@ -267,24 +356,46 @@ Before proceeding, verify:
 - [ ] MCP status validation performed
 - [ ] Story fetched from issue tracker
 - [ ] Story has sufficient detail (description, acceptance criteria)
+- [ ] Document type determined (Spec vs Plan)
 - [ ] User story format parsed (or requirements extracted)
 - [ ] Acceptance criteria extracted and validated
 - [ ] Codebase searched for similar implementations
 - [ ] Existing patterns reviewed
 - [ ] Affected components identified
 - [ ] Related test files reviewed
-- [ ] Implementation broken down into subtasks
-- [ ] Files to create/modify identified
-- [ ] Database changes planned (if applicable)
-- [ ] API changes designed (if applicable)
-- [ ] Test strategy defined
-- [ ] Dependencies documented
-- [ ] Error handling planned
-- [ ] Plan document created with required sections
-- [ ] Plan file verified
-- [ ] Plan summary posted to issue
+- [ ] **If creating Spec:**
+  - [ ] Feature domain identified
+  - [ ] Blueprint designed (Context, Architecture, Anti-Patterns)
+  - [ ] Contract designed (Definition of Done, Guardrails, Scenarios)
+  - [ ] Spec document created at `specs/{FEATURE_DOMAIN}/spec.md`
+  - [ ] Spec summary posted to issue
+- [ ] **If creating Plan:**
+  - [ ] Implementation broken down into subtasks
+  - [ ] Files to create/modify identified
+  - [ ] Database/API changes planned (if applicable)
+  - [ ] Test strategy defined
+  - [ ] Dependencies documented
+  - [ ] Error handling planned
+  - [ ] Plan document created at `.plans/{TASK_KEY}-*.plan.md`
+  - [ ] Plan summary posted to issue
 
-## Plan Document Structure
+## Document Structures
+
+### Spec Document Structure (Permanent)
+
+The spec document must include the following sections:
+
+1. **Feature Header**: Feature name, ASDLC pattern link, status, last updated date
+2. **Blueprint Section**:
+   - **Context**: Business problem and solution rationale
+   - **Architecture**: API contracts, data models, dependencies, dependency directions
+   - **Anti-Patterns**: Forbidden approaches with rationale
+3. **Contract Section**:
+   - **Definition of Done**: Observable, testable success criteria (checkboxes)
+   - **Regression Guardrails**: Critical invariants that must never break
+   - **Scenarios**: Gherkin-style (Given/When/Then) behavioral specifications
+
+### Plan Document Structure (Transient)
 
 The plan document must include the following sections:
 
@@ -301,23 +412,30 @@ The plan document must include the following sections:
 ## Guidance
 
 ### Role
-Act as a **software engineer** responsible for creating a detailed technical implementation plan. You are analytical, thorough, and consider both technical feasibility and maintainability.
+Act as a **software engineer** responsible for creating either a permanent living specification (Spec) or a transient implementation plan (Plan). You are analytical, thorough, and understand the difference between State (Spec) and Delta (Plan).
 
 ### Instruction
-Execute the create-plan workflow to generate a comprehensive technical implementation plan for a story. This includes:
+Execute the create-spec/create-plan workflow to generate either:
+- **Spec** (Blueprint + Contract): Permanent living specification for a feature domain
+- **Plan** (Implementation Steps): Transient task-level implementation guide
+
+This includes:
 1. Performing prerequisite validation checks
 2. Analyzing the story and extracting requirements
-3. Reviewing the codebase to understand patterns and identify similar implementations
-4. Designing the technical approach and breaking it down into actionable steps
-5. Generating a structured plan document with all required sections
+3. Determining whether to create Spec or Plan (or both)
+4. Reviewing the codebase to understand patterns
+5. Designing the appropriate document structure
+6. Generating the structured document with all required sections
 
 ### Context
 - The story is tracked in an issue management system (Jira, Azure DevOps, GitHub Issues, etc.)
 - The codebase has existing patterns, conventions, and architectural decisions that should be respected
 - MCP integrations provide access to issue trackers for fetching story details
-- Plan documents are stored in `.plans/` directory and follow naming convention `{TASK_KEY}-{description}.plan.md`
-- The plan will be used by developers to implement the story in subsequent steps
-- Plans should be detailed enough for implementation but not overly prescriptive
+- **Specs** are stored in `specs/{FEATURE_DOMAIN}/spec.md` and live permanently with code
+- **Plans** are stored in `.plans/{TASK_KEY}-{description}.plan.md` and are discarded after merge
+- Specs define State (how the feature works), Plans define Delta (what changes for this task)
+- Specs follow Blueprint + Contract structure per ASDLC patterns
+- The document will be used by developers and agents to implement/maintain the feature
 
 ### Examples
 
@@ -461,39 +579,55 @@ Ready for implementation.
 **Rules (Must Follow):**
 1. **Prerequisites Must Pass**: Do not proceed if MCP validation fails or story doesn't exist. STOP and report the issue.
 2. **Story Validation**: Story must have sufficient detail (description, 3+ acceptance criteria). If missing, STOP and ask for clarification.
-3. **Plan File Naming**: Use format `.plans/{TASK_KEY}-{kebab-case-description}.plan.md`
+3. **Document Type Decision**: Determine if Spec, Plan, or both are needed. If unclear, ask user.
+4. **Spec File Naming**: Use format `specs/{FEATURE_DOMAIN}/spec.md` where {FEATURE_DOMAIN} is kebab-case
+   - Feature domains are conceptual groupings (e.g., `user-authentication`, `payment-processing`)
+   - Ask user for feature domain name if unclear
+5. **Plan File Naming**: Use format `.plans/{TASK_KEY}-{kebab-case-description}.plan.md`
    - Example: `PROJ-123-user-authentication.plan.md`
-   - If creating a plan and file doesn't exist, that's expected - proceed with creation
-4. **Required Sections**: Plan document must include all sections: Story, Context, Scope, Acceptance Criteria, Technical Design, Implementation Steps, Testing, Dependencies, Status
-5. **Codebase Analysis**: Must search for similar implementations before designing. Don't reinvent patterns that already exist.
-6. **Implementation Steps**: Break down into 3-7 logical subtasks. Each should be complete and testable.
-7. **File Identification**: Must specify exact file paths for files to create/modify. Use relative paths from project root.
-8. **Test Strategy**: Must include unit tests, integration tests, and test data requirements. Follow existing test patterns.
-9. **Error Handling**: If story analysis reveals blockers or missing information, STOP and ask specific questions. Don't proceed with assumptions.
-10. **Plan Summary**: Post summary to issue tracker after plan creation. If posting fails, note it but don't fail the command.
+6. **Required Sections**:
+   - Spec must include: Feature header, Blueprint (Context, Architecture, Anti-Patterns), Contract (DoD, Guardrails, Scenarios)
+   - Plan must include: Story, Context, Scope, Acceptance Criteria, Technical Design, Implementation Steps, Testing, Dependencies, Status
+7. **Codebase Analysis**: Must search for similar implementations before designing. Don't reinvent patterns that already exist.
+8. **Spec vs Plan Content**:
+   - Spec = State (how feature works permanently)
+   - Plan = Delta (what changes for this task)
+   - Don't duplicate content between them
+9. **Same-Commit Rule**: When updating existing spec, remind user to commit spec changes with code changes
+10. **File Identification**: Must specify exact file paths. Use relative paths from project root.
+11. **Test Strategy**: Must include unit tests, integration tests, test data. Follow existing patterns.
+12. **Error Handling**: If analysis reveals blockers or missing information, STOP and ask specific questions.
+13. **Document Summary**: Post summary to issue tracker after creation. If posting fails, note it but don't fail the command.
 
 **Existing Standards (Reference):**
 - MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
+- Spec guidance: See `specs/README.md` for template and when to create/update specs
 - Plan file location: `.plans/{TASK_KEY}-*.plan.md` (referenced in `start-task.md` and `complete-task.md`)
 - **Plan File Selection**: If multiple files match the pattern `.plans/{TASK_KEY}-*.plan.md`:
   - Use the most recently modified file (check file modification time)
   - If modification time cannot be determined, use the first file found alphabetically
   - Report which file was selected: "Using plan file: {filename}"
 - Story format: User story format ("As a... I want... So that...") as used in `create-task.md`
-- File naming: Kebab-case for plan files (consistent with branch naming conventions)
-- Branch naming: Short format `{type}/{TASK_KEY}` (consistent with `start-task.md` and `complete-task.md`)
+- File naming: Kebab-case for all filenames
+- ASDLC patterns: The Spec, The PBI, Living Specs (available via ASDLC MCP server)
 
 ### Output
-1. **Plan Document**: Structured markdown file at `.plans/{TASK_KEY}-{description}.plan.md` containing:
+1. **Spec Document** (if creating spec): Structured markdown file at `specs/{FEATURE_DOMAIN}/spec.md` containing:
+   - Blueprint: Context, Architecture, Anti-Patterns
+   - Contract: Definition of Done, Regression Guardrails, Scenarios
+   - Permanent living specification that evolves with code
+
+2. **Plan Document** (if creating plan): Structured markdown file at `.plans/{TASK_KEY}-{description}.plan.md` containing:
    - Story details and context
    - Technical design and architecture
    - Step-by-step implementation guide
    - Testing strategy
    - Dependencies and status tracking
+   - Transient document discarded after merge
 
-2. **Issue Comment**: Plan summary posted to the issue tracker with:
-   - Link to plan file
+3. **Issue Comment**: Summary posted to the issue tracker with:
+   - Link to spec/plan file
    - Brief approach summary
-   - Key implementation steps
+   - Key sections or implementation steps
 
-The plan should be detailed enough for a developer to implement the story without additional clarification, while being flexible enough to allow for implementation adjustments.
+The documents should provide clear guidance for implementation while maintaining appropriate granularity (Spec = permanent contracts, Plan = transient steps).
