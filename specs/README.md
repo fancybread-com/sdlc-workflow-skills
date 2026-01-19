@@ -23,55 +23,7 @@ This directory contains **permanent living specifications** for features. Specs 
 
 ## Spec Template
 
-Copy this template when creating a new spec:
-
-```markdown
-# Feature: {Feature Name}
-
-> **ASDLC Pattern**: [The Spec](https://asdlc.io/patterns/the-spec/)  
-> **Status**: Active | Deprecated | Superseded  
-> **Last Updated**: YYYY-MM-DD
-
----
-
-## Blueprint
-
-### Context
-[Why does this feature exist? What business problem does it solve?]
-
-### Architecture
-- **API Contracts**: Endpoints, request/response formats
-- **Data Models**: Schemas, validation rules, data structures
-- **Dependencies**: What this depends on, what depends on this
-- **Dependency Directions**: Inbound/outbound relationships
-
-### Anti-Patterns
-- [What agents must NOT do, with rationale]
-- [Forbidden approaches that were considered and rejected]
-
----
-
-## Contract
-
-### Definition of Done
-- [ ] [Observable success criterion 1]
-- [ ] [Observable success criterion 2]
-- [ ] [Observable success criterion 3]
-- [ ] [Automated verification: tests pass, lint passes, builds successfully]
-
-### Regression Guardrails
-- [Critical invariant that must never break]
-- [Performance targets that must be maintained]
-- [Security requirements that must hold]
-
-### Scenarios
-**Scenario: {Scenario Name}**
-- **Given**: [Precondition]
-- **When**: [Action]
-- **Then**: [Expected outcome]
-
-[Additional scenarios as needed]
-```
+Copy from **`specs/TEMPLATE.md`** when creating a new spec. The template includes Blueprint (Context, Architecture, Anti-Patterns — the "why" and "how"), Contract (Definition of Done, Regression Guardrails, Scenarios — the "what" and verification), Gherkin-style scenario examples, and brief purpose lines for each section. See `specs/TEMPLATE.md` for the full template, placeholders, and section guidance.
 
 ---
 
