@@ -26,6 +26,13 @@ Breaks down large tasks into smaller, manageable subtasks that are:
 
 ---
 
+## ASDLC
+
+- **Patterns**: [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Factory Architecture, Quality Control (information-density gate)
+
+---
+
 ## Usage
 
 ```bash

@@ -60,6 +60,13 @@ AI:
 
 ---
 
+## ASDLC
+
+- **Patterns**: [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Factory Architecture, Quality Control
+
+---
+
 ## Prerequisites
 
 Before proceeding, the command verifies:

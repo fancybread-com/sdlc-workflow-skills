@@ -114,6 +114,12 @@ Run `validate_mcps.py --list` to get the list of record, then for each server ca
 ### Context
 - MCP servers can disconnect or lose auth after inactivity. Use at start of day, after inactivity, or before critical commands.
 - Use the `mcps/` list of record, not a runtime MCP API, to know which servers exist.
+- **ASDLC patterns**: [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Quality Control** (pre-flight validation for other commands)
+
+### Examples
+
+**ASDLC**: [Context Gates](asdlc://context-gates) — MCP checks act as an input gate before running commands that depend on them.
 
 ### Constraints
 - Read-only only; no data modified. If a server test fails, distinguish auth errors (reconnect) from other errors.

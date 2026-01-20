@@ -351,8 +351,12 @@ Execute the complete-task workflow to finalize development work on a specified t
 - Automated CI/CD pipelines run checks on pushed branches
 - The codebase follows conventional commit standards and branch naming conventions
 - **Same-Commit Rule**: Spec updates must be committed with code changes that affect behavior/contracts
+- **ASDLC patterns**: [Constitutional Review](asdlc://constitutional-review), [The Spec](asdlc://the-spec), [The PBI](asdlc://the-pbi), [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Quality Control** (Review Gate), **Standardized Parts** (Constitution)
 
 ### Examples
+
+**ASDLC**: [Constitutional Review](asdlc://constitutional-review) — Validates changes against AGENTS.md before PR creation.
 
 **Example Branch Names:**
 - `feat/PROJ-123` (story/feature)

@@ -377,8 +377,12 @@ Execute the refine-task workflow to improve a task by making a common sense esti
 - Team-level patterns (not individual assignment) are considered - learn from any team member's work
 - Conservative refinement approach preserves existing content while filling critical gaps
 - Story point estimates (if used) should prioritize common sense, validated by historical data when available
+- **ASDLC patterns**: [The PBI](asdlc://the-pbi), [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Factory Architecture** (refinement step), **Quality Control** (DoR as gate)
 
 ### Examples
+
+**ASDLC**: [Context Gates](asdlc://context-gates) — Definition of Ready acts as an input gate before work can start.
 
 **Example 1: Task with Similar Historical Tasks**
 

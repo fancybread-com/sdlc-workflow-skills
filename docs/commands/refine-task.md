@@ -35,6 +35,13 @@ The command uses intelligent analysis to:
 
 ---
 
+## ASDLC
+
+- **Patterns**: [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Factory Architecture, Quality Control (DoR as gate)
+
+---
+
 ## Usage
 
 ```bash

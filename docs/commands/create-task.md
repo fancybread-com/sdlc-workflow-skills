@@ -22,6 +22,13 @@ Creates tasks in the issue tracker with type-specific workflows. Supports epics,
 
 ---
 
+## ASDLC
+
+- **Patterns**: [The PBI](https://asdlc.io/patterns/the-pbi/), [Agent Constitution](https://asdlc.io/patterns/agent-constitution/)
+- **Pillars**: Factory Architecture, Standardized Parts
+
+---
+
 ## Usage
 
 The command supports two syntax styles:

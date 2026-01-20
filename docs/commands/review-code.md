@@ -49,6 +49,11 @@ Perform adversarial AI-assisted code review on a pull request or branch changes 
   - Location: File:Line reference
   - Reference: Which Spec criterion or Constitutional boundary was violated
 
+## ASDLC
+
+- **Patterns**: [Adversarial Code Review](https://asdlc.io/patterns/adversarial-code-review/), [Constitutional Review](https://asdlc.io/patterns/constitutional-review/), [The Spec](https://asdlc.io/patterns/the-spec/)
+- **Pillars**: Quality Control (Review Gate, dual-contract validation)
+
 ## Prerequisites
 
 Before proceeding, verify:

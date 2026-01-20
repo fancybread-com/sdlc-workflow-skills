@@ -72,6 +72,13 @@ Plan includes:
 
 ---
 
+## ASDLC
+
+- **Patterns**: [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/)
+- **Pillars**: Standardized Parts (spec/plan as State vs Delta)
+
+---
+
 ## Prerequisites
 
 Before proceeding, the command verifies:

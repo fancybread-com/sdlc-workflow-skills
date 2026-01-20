@@ -77,4 +77,6 @@ Commands are markdown files that tell AI agents what to achieve. The AI reads yo
 
 Then executes contextually - same command, different projects, intelligent adaptation.
 
+Each command aligns with specific [ASDLC](https://asdlc.io) patterns and pillars (Factory Architecture, Standardized Parts, Quality Control); see individual command pages for details.
+
 [Learn more about the methodology →](../getting-started.md#how-it-works)

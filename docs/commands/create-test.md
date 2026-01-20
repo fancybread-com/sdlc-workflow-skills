@@ -17,6 +17,11 @@ Generate unit tests for code components. The command adapts to backend or fronte
 - **Test File Naming Convention**: Pattern for test file names (e.g., `*.test.ts`, `*_test.py`, `*.spec.js`, `*Test.cs`, `*Tests.cs`)
 - **Arrange-Act-Assert (AAA) Pattern**: Test structure: Arrange (setup), Act (execute), Assert (verify)
 
+## ASDLC
+
+- **Patterns**: [The Spec](https://asdlc.io/patterns/the-spec/), [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Quality Control, Standardized Parts (Contract scenarios)
+
 ## Prerequisites
 
 Before proceeding, verify:

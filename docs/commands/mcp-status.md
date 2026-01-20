@@ -21,6 +21,15 @@ Checks each configured MCP server (Jira, GitHub, etc.) to verify:
 - ✅ Authentication is valid
 - ⚠️ Which servers need reconnection
 
+---
+
+## ASDLC
+
+- **Patterns**: [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Quality Control
+
+---
+
 ## Example Output
 
 **All connected:**
