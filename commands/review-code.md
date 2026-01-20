@@ -391,8 +391,12 @@ Execute the adversarial review-code workflow to perform comprehensive code revie
 - {PR_KEY} can be specified in multiple formats (PR-12, #12, or 12) and should be normalized to numeric ID
 - {BRANCH_NAME} follows `{type}/{TASK_KEY}` format for feature branches (consistent with other commands)
 - GitHub MCP integration provides access to PR data, diffs, and file lists
+- **ASDLC patterns**: [Adversarial Code Review](asdlc://adversarial-code-review), [Constitutional Review](asdlc://constitutional-review), [The Spec](asdlc://the-spec)
+- **ASDLC pillars**: **Quality Control** (Review Gate, dual-contract validation)
 
 ### Examples
+
+**ASDLC**: [Adversarial Code Review](asdlc://adversarial-code-review) and [Constitutional Review](asdlc://constitutional-review) — Critic Agent validates against Spec and Constitution in a fresh context.
 
 **Example 1: Review Pull Request with Spec Validation**
 ```

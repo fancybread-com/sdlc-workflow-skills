@@ -197,8 +197,12 @@ Execute the start-task workflow to begin development on a specified task. This i
 - MCP integrations provide access to issue trackers and version control
 - The codebase has existing patterns, conventions, and architectural decisions that should be respected
 - **Same-Commit Rule**: If code changes behavior/contracts, update spec in same commit
+- **ASDLC patterns**: [The Spec](asdlc://the-spec), [The PBI](asdlc://the-pbi), [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Factory Architecture** (command station), **Quality Control** (pre-flight gates)
 
 ### Examples
+
+**ASDLC**: [Context Gates](asdlc://context-gates) — MCP and plan checks act as input gates before implementation.
 
 **Example Branch Names:**
 - `feat/PROJ-123` (story/feature)

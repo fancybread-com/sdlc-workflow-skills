@@ -660,8 +660,12 @@ Execute the create-task workflow to create tasks with proper validation and stru
 - **PBI Structure**: Stories and Epics use ASDLC PBI 4-part anatomy (Directive, Context Pointer, Verification Pointer, Refinement Rule)
 - **Feature Domain**: Kebab-case identifier linking PBIs to Specs at `specs/{feature-domain}/spec.md`
 - **Spec Integration**: PBIs reference permanent Specs (pointers, not containers)
+- **ASDLC patterns**: [The PBI](asdlc://the-pbi), [Agent Constitution](asdlc://agent-constitution)
+- **ASDLC pillars**: **Factory Architecture** (workflow), **Standardized Parts** (PBI anatomy, issue types)
 
 ### Examples
+
+**ASDLC**: [The PBI](asdlc://the-pbi) — Task creation produces PBIs that reference Specs; [Agent Constitution](asdlc://agent-constitution) shapes issue types and fields.
 
 **Example 1: Epic from Plan File**
 ```

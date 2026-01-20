@@ -437,8 +437,12 @@ This includes:
 - Specs define State (how the feature works), Plans define Delta (what changes for this task)
 - Specs follow Blueprint + Contract structure per ASDLC patterns
 - The document will be used by developers and agents to implement/maintain the feature
+- **ASDLC patterns**: [The Spec](asdlc://the-spec), [The PBI](asdlc://the-pbi)
+- **ASDLC pillars**: **Standardized Parts** (spec/plan as State vs Delta)
 
 ### Examples
+
+**ASDLC**: [The Spec](asdlc://the-spec) and [The PBI](asdlc://the-pbi) — Specs define State; plans define Delta for a task.
 
 **Example Story Input (from Jira):**
 ```

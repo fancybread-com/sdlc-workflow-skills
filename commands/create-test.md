@@ -328,8 +328,12 @@ Execute the create-test workflow to generate unit tests for a specified componen
 - Tests should be isolated, fast, and focused on the component being tested
 - Backend and frontend code require different mocking strategies
 - The goal is to achieve good test coverage while maintaining test quality
+- **ASDLC patterns**: [The Spec](asdlc://the-spec), [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Quality Control** (test as output gate), **Standardized Parts** (Contract scenarios)
 
 ### Examples
+
+**ASDLC**: [The Spec](asdlc://the-spec) — Contract scenarios drive tests when present; test output acts as a [Context Gates](asdlc://context-gates) gate.
 
 **Example 1: Backend Service Test (Node.js/Jest)**
 

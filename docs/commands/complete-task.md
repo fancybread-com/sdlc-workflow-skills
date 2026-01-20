@@ -21,6 +21,11 @@ Commit changes, push to remote, create pull request, and transition issue to "Co
 - **Completed Checklist**: Markdown checklist posted as a comment to the issue showing what work was completed
 - **Current Branch**: Should match the expected format `{type}/{TASK_KEY}` (e.g., `feat/FB-6`, `fix/PROJ-123`)
 
+## ASDLC
+
+- **Patterns**: [Constitutional Review](https://asdlc.io/patterns/constitutional-review/), [The Spec](https://asdlc.io/patterns/the-spec/), [The PBI](https://asdlc.io/patterns/the-pbi/), [Context Gates](https://asdlc.io/patterns/context-gates/)
+- **Pillars**: Quality Control (Review Gate), Standardized Parts (Constitution)
+
 ## Prerequisites
 
 Before proceeding, verify:

@@ -452,8 +452,12 @@ Execute the decompose-task workflow to break down large tasks into manageable su
 - MCP integrations provide access to issue trackers for reading tasks and creating subtasks
 - The decomposition process uses intelligent analysis to ensure tasks have sufficient detail before decomposition
 - Generated subtasks must meet specific quality criteria to be useful for the development team
+- **ASDLC patterns**: [The PBI](asdlc://the-pbi), [Context Gates](asdlc://context-gates)
+- **ASDLC pillars**: **Factory Architecture** (decomposition workflow), **Quality Control** (information-density gate)
 
 ### Examples
+
+**ASDLC**: [Context Gates](asdlc://context-gates) — Information-density check acts as an input gate before decomposition.
 
 **Example 1: Vague Epic**
 
