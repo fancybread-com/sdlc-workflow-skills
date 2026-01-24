@@ -389,12 +389,12 @@ This project implements the three pillars of [ASDLC.io](https://asdlc.io):
 
 ```mermaid
 graph LR
-  A[/create-task] --> B[/decompose-task]
-  B --> C[/refine-task]
-  C --> D[/create-plan]
-  D --> E[/start-task]
-  E --> F[/complete-task]
-  F --> G[/review-code]
+  A["/create-task"] --> B["/decompose-task"]
+  B --> C["/refine-task"]
+  C --> D["/create-plan"]
+  D --> E["/start-task"]
+  E --> F["/complete-task"]
+  F --> G["/review-code"]
 ```
 
 ### Command Dependencies
