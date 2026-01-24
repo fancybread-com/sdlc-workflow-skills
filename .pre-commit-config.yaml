@@ -1,0 +1,27 @@
+# Pre-commit hooks configuration (FB-23)
+# See https://pre-commit.com for more information
+# Install: pip install -r requirements.txt && pre-commit install
+
+repos:
+  # Local hooks for schema validation
+  - repo: local
+    hooks:
+      # Schema validation for commands and MCPs
+      - id: validate-schemas
+        name: Validate command and MCP schemas
+        entry: venv/bin/python schemas/validate_changed.py
+        language: system
+        types: [text]
+        files: ^(commands/.*\.md|mcps/.*\.json)$
+        pass_filenames: true
+        always_run: false
+
+      # Link checking for documentation
+      - id: check-links
+        name: Check markdown links
+        entry: venv/bin/python scripts/check_links.py
+        language: system
+        types: [markdown]
+        files: ^(docs/.*\.md|commands/.*\.md|specs/.*\.md|README\.md|AGENTS\.md)$
+        pass_filenames: true
+        always_run: false
