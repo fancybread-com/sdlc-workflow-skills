@@ -96,6 +96,7 @@ nav:
 
   - Reference:
     - MCP Setup: mcp-setup.md
+    - ASDLC Alignment: asdlc-alignment.md
 
   - Releases: releases.md
 
