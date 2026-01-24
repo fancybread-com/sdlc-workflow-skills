@@ -66,6 +66,3 @@ The command mapping table above shows which patterns each command implements. Ke
 ## External Resources
 
 - [ASDLC.io](https://asdlc.io/) - ASDLC methodology and patterns
-- [Factory Architecture](https://asdlc.io/concepts/factory-architecture/) - Specialized command stations
-- [Standardized Parts](https://asdlc.io/concepts/standardized-parts/) - Schema-enforced structure
-- [Quality Control](https://asdlc.io/concepts/quality-control/) - Validation gates
