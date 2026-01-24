@@ -12,3 +12,6 @@ mkdocs-mermaid2-plugin>=1.1.0  # Optional: Enhanced Mermaid
 # Command schema validation (FB-18)
 jsonschema>=4.20.0,<5
 
+# Pre-commit hooks (FB-23)
+pre-commit>=3.0.0
+
