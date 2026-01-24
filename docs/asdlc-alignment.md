@@ -61,7 +61,7 @@ The command mapping table above shows which patterns each command implements. Ke
 
 - [Commands Reference](commands/index.md) - Detailed documentation for each command
 - [Getting Started](getting-started.md) - Setup and usage guide
-- [AGENTS.md](../AGENTS.md) - Agent Constitution and operational boundaries
+- [AGENTS.md](https://github.com/fancybread-com/agentic-software-development/blob/main/AGENTS.md) - Agent Constitution and operational boundaries
 
 ## External Resources
 
