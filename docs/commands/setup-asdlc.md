@@ -102,7 +102,7 @@ Next steps:
 
 ## See Also
 
-- [Living Specifications](../../specs/README.md) - Guide to creating and maintaining specs
+- [Living Specifications](https://github.com/fancybread-com/agentic-software-development/blob/main/specs/README.md) - Guide to creating and maintaining specs
 - [Agent Constitution Pattern](https://asdlc.io/patterns/agent-constitution/) - AGENTS.md specification
 - [MCP Setup](../mcp-setup.md) - Configure Model Context Protocol servers
 
