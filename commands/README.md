@@ -10,7 +10,6 @@ Copy `commands/*` to `~/.cursor/commands/` (global) or `.cursor/commands/` (per-
 
 - [Commands](../docs/commands/index.md) — What each command does, usage, examples
 - [Quick Reference](../docs/commands/quick-reference.md) — Copy-paste cheat sheet
-- [By Role](../docs/commands/by-role.md) — Commands organized by role
 
 ## Example Workflow
 
