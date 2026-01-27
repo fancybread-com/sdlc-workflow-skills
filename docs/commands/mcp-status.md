@@ -48,7 +48,7 @@ Configured servers:
   ✅ github - Connected
 
 ⚠️ To reconnect:
-Settings → Tools & MCP → Click "Connect"
+Cursor Settings → Features → Model Context Protocol → Connect
 ```
 
 ## When to Use

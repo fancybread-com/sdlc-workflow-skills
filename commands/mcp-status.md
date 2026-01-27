@@ -5,9 +5,9 @@ Check the authentication status of all configured Model Context Protocol (MCP) s
 
 ## Definitions
 
-- **Spec** (this command): `specs/mcp-status/spec.md` — Blueprint and Contract.
-- **MCP server**: A configured Model Context Protocol server in Cursor (e.g. atlassian, github, asdlc, ado).
-- **List of record**: The `mcps/` directory and `python schemas/validate_mcps.py --list`; defines which servers and `mcp_<Server>_<Tool>` refs this project supports.
+- **Spec** (this command): `specs/mcp-status/spec.md` — Blueprint and Contract (if present in project).
+- **MCP server**: A configured Model Context Protocol server in Cursor (e.g. github, atlassian, ado, asdlc).
+- **MCP configuration**: The `mcpServers` section in `~/.cursor/mcp.json` (macOS/Linux) or `%USERPROFILE%\.cursor\mcp.json` (Windows), or configured via Cursor Settings → Features → Model Context Protocol.
 
 ## Prerequisites
 
@@ -19,19 +19,21 @@ MCP servers can disconnect or lose authentication after periods of inactivity. U
 
 ## Steps
 
-1. **Get the list of record (configured MCP servers and tools)**
-   - Run: `python schemas/validate_mcps.py --list` (or `--list --json` for machine-readable).
-   - This enumerates `mcps/<server>/tools/*.json` — the **list of record** for which MCP tools this project supports. Servers are the top-level dirs under `mcps/` (e.g. `atlassian`, `github`, `asdlc`, `ado`).
-   - Use this list (not a runtime MCP API) to know which servers and `mcp_<Server>_<Tool>` refs exist.
+1. **Discover configured MCP servers**
+   - Read the MCP configuration file: `~/.cursor/mcp.json` (macOS/Linux) or `%USERPROFILE%\.cursor\mcp.json` (Windows).
+   - Extract the `mcpServers` object keys to get the list of configured server names (e.g. `github`, `atlassian`, `ado`, `asdlc`).
+   - If the config file is not accessible, try common server names: `github`, `atlassian`, `ado`, `asdlc`, `user-github`, `user-atlassian`, `user-ado`, `user-asdlc` (with and without `user-` prefix).
+   - Note: Server names in the config may differ from tool prefixes (e.g., config has `github` but tools use `mcp_github_*` or `mcp_user-github_*`).
 
 2. **Test each server connection**
-   - For each server in the list of record, call a lightweight read-only tool. Use this mapping (from `mcps/`):
-     - **atlassian** → `mcp_atlassian_getAccessibleAtlassianResources` or `mcp_atlassian_atlassianUserInfo`
-     - **github** → `mcp_github_list_commits` (args: owner, repo)
-     - **asdlc** → `mcp_asdlc_list_articles`
-     - **ado** → `mcp_ado_core_list_projects`
-   - If a server has no entry above, pick a read-only tool from `python schemas/validate_mcps.py --list` for that server and call it with minimal required args.
-   - Record success or failure for each server.
+   - For each discovered server, attempt to call a lightweight read-only tool to verify connectivity and authentication.
+   - Use common tool patterns for known server types:
+     - **github** / **user-github** → Try `list_commits` (may require owner/repo args) or `list_branches`
+     - **atlassian** / **user-atlassian** → Try `getAccessibleAtlassianResources` or `atlassianUserInfo`
+     - **ado** / **user-ado** → Try `core_list_projects`
+     - **asdlc** / **user-asdlc** → Try `list_articles`
+   - For unknown server types, try common tool names like `list_*`, `get_*`, or `*_info` with minimal or empty args.
+   - Record success or failure for each server. Handle "server not found" vs "authentication error" vs "tool not found" differently.
 
 3. **Report status**
    - Display results in a clear, formatted list
@@ -41,14 +43,16 @@ MCP servers can disconnect or lose authentication after periods of inactivity. U
 ## Tools
 
 ### Filesystem
-- `python schemas/validate_mcps.py --list` (or `--list --json`) — Enumerate `mcps/` as the list of record; use to know which servers and `mcp_<Server>_<Tool>` refs exist.
+- Read MCP configuration: `~/.cursor/mcp.json` (macOS/Linux) or `%USERPROFILE%\.cursor\mcp.json` (Windows)
+- Parse JSON to extract `mcpServers` keys
 
-### MCP (per server from list of record)
-- **atlassian** → `mcp_atlassian_getAccessibleAtlassianResources` or `mcp_atlassian_atlassianUserInfo`
-- **github** → `mcp_github_list_commits` (owner, repo)
-- **asdlc** → `mcp_asdlc_list_articles`
-- **ado** → `mcp_ado_core_list_projects`
-- For other servers: pick a read-only tool from `validate_mcps.py --list` and call with minimal required args.
+### MCP (per discovered server)
+- **github** / **user-github** → Try `list_commits`, `list_branches`, or other read-only tools
+- **atlassian** / **user-atlassian** → Try `getAccessibleAtlassianResources`, `atlassianUserInfo`
+- **ado** / **user-ado** → Try `core_list_projects`
+- **asdlc** / **user-asdlc** → Try `list_articles`
+- **Other servers**: Try common read-only tool patterns (`list_*`, `get_*`, `*_info`) with minimal or empty args
+- Note: Tool names may be prefixed with `mcp_<server>_` or `mcp_user-<server>_` depending on configuration
 
 ## Expected Output
 
@@ -90,12 +94,16 @@ Configured servers:
 ## Error Handling
 
 If unable to discover MCP servers:
-- Report that no MCP servers are configured
-- Provide link to MCP setup documentation
+- If config file is not accessible, try common server names as fallback
+- If no servers respond, report that no MCP servers are configured or accessible
+- Provide link to MCP setup documentation (e.g., `docs/mcp-setup.md` if present, or general MCP setup instructions)
 
 If a server test fails:
-- Distinguish between authentication errors (needs reconnect) and other errors
-- Provide specific guidance for each failure type
+- **Server not found**: Server name doesn't exist in MCP configuration
+- **Authentication error**: Server exists but needs reconnection/authentication
+- **Tool not found**: Server exists but the tested tool isn't available (try a different tool)
+- **Network/connection error**: Server unreachable or connection failed
+- Provide specific guidance for each failure type, especially authentication errors which require user action
 
 ## Notes
 
@@ -110,11 +118,12 @@ If a server test fails:
 Act as a **developer** checking that MCP integrations are ready before running commands that depend on them.
 
 ### Instruction
-Run `validate_mcps.py --list` to get the list of record, then for each server call one lightweight read-only MCP tool. Report connected / disconnected; for disconnected, give reconnection steps (Cursor Settings → Tools & MCP).
+Read the MCP configuration file (`~/.cursor/mcp.json` or Windows equivalent) to discover configured servers. For each server, attempt to call a lightweight read-only MCP tool to verify connectivity and authentication. Report connected / disconnected status; for disconnected servers, provide reconnection steps (Cursor Settings → Features → Model Context Protocol).
 
 ### Context
 - MCP servers can disconnect or lose auth after inactivity. Use at start of day, after inactivity, or before critical commands.
-- Use the `mcps/` list of record, not a runtime MCP API, to know which servers exist.
+- Discover servers from the MCP configuration file, not from project-specific directories or scripts.
+- If config file is not accessible, try common server names and test connectivity.
 - **ASDLC patterns**: [Context Gates](asdlc://context-gates)
 - **ASDLC pillars**: **Quality Control** (pre-flight validation for other commands)
 
