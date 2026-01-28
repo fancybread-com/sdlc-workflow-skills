@@ -58,11 +58,11 @@ unzip commands-vX.X.X.zip  # Windows
 
 # Copy to Cursor commands directory
 # Global (all projects):
-cp -r cursor/commands/* ~/.cursor/commands/
+cp -r commands/* ~/.cursor/commands/
 
 # Per-project:
 mkdir -p .cursor/commands
-cp -r cursor/commands/* .cursor/commands/
+cp -r commands/* .cursor/commands/
 ```
 
 See the [Getting Started guide](getting-started.md) for detailed setup instructions.

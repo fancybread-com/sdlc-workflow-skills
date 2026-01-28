@@ -21,6 +21,8 @@ Refine a task to meet Definition of Ready (DoR) by ensuring clarity, completenes
   - **Refinement Rule**: Protocol for when implementation diverges from Spec
 - **Feature Domain**: Kebab-case feature name identifying the functional area (e.g., `user-authentication`, `payment-processing`) used to locate Specs at `specs/{feature-domain}/spec.md`
 - **Completed Status**: "Done" or "Completed" status in Jira
+- **RICCO**: Optional prompt structure (Role, Intent, Context, Constraints, Output) for AI agents. Embedded in this command. Use `--ricco` to include; PBI remains default.
+- **--ricco**: Optional flag. When set, include RICCO structure (see "Embedded: RICCO" below) in the refined task. Additive; PBI structure is default.
 
 ## Prerequisites
 
@@ -43,6 +45,22 @@ Before proceeding, verify:
 
 4. **Task is Refinable**: Verify task is not already in "Done" or "Completed" status
    - **If task is already completed, STOP and report: "Task {TASK_KEY} is already completed and cannot be refined."**
+
+5. **Optional --ricco**: If `--ricco` is passed, include embedded RICCO structure in the refined task. PBI is default; RICCO is an include.
+
+## Embedded: PBI 4-part anatomy (validation reference)
+
+Use to validate and refine tasks. **Directive** (what to do, scope, constraints) → **Context Pointer** (`specs/{feature-domain}/spec.md#blueprint`) → **Verification Pointer** (`specs/{feature-domain}/spec.md#contract`) → **Refinement Rule** (STOP / update spec same commit / flag review if boundaries affected).
+
+## Embedded: RICCO (optional include when `--ricco`)
+
+**Role** — [Agent role, e.g. backend developer, QA engineer.]  
+**Intent** — [One clear goal.]  
+**Context** — [Spec refs, prior work, dependencies, docs.]  
+**Constraints** — [What not to do; boundaries; limits.]  
+**Output** — [Concrete deliverables; what "done" looks like.]
+
+Populate from the task; add as "## RICCO" or integrate into the refined description. Additive to PBI.
 
 ## Steps
 
@@ -123,6 +141,11 @@ Before proceeding, verify:
      - Use bullet points for lists
      - Group related information together
      - Make content scannable (easy to read quickly)
+   - **Optional RICCO include (if `--ricco`):**
+     - Use the embedded RICCO structure (see "Embedded: RICCO" in this command)
+     - Populate Role, Intent, Context, Constraints, Output from the task
+     - Add as a section (e.g. "## RICCO") or integrate into the refined description
+     - RICCO is additive; PBI structure remains default
    - **Enhancements (if needed):**
      - **Clarify ambiguous language:**
        - Replace vague terms with specific terms (if clear from context)
@@ -169,7 +192,7 @@ Before proceeding, verify:
      - **PBI Structure Validation:**
        - If PBI structure complete: "✅ Task follows PBI 4-part anatomy (Directive, Context Pointer, Verification Pointer, Refinement Rule)"
        - If PBI structure partial: "⚠️ Task has partial PBI structure. Missing: {list missing parts}. Consider adding missing sections for better organization."
-       - If PBI structure missing: "ℹ️ Task does not follow PBI 4-part anatomy. Consider restructuring for better organization (see `templates/pbi-template.md`)."
+       - If PBI structure missing: "ℹ️ Task does not follow PBI 4-part anatomy. Consider restructuring for better organization (see embedded PBI structure in this command)."
      - **Feature Domain and Spec Existence:**
        - If feature domain detected: "Feature domain: `{feature-domain}`"
        - If spec exists: "✅ Spec found at `specs/{feature-domain}/spec.md`"
@@ -218,9 +241,7 @@ Before proceeding, verify:
 ### Filesystem Tools
 - `glob_file_search` - Check for spec existence at `specs/{feature-domain}/spec.md`
   - Pattern: `**/specs/*/spec.md`
-- `read_file` - Read PBI template and spec files for validation
-  - PBI template: `templates/pbi-template.md`
-  - Spec location: `specs/{feature-domain}/spec.md`
+- PBI and RICCO structures are embedded in this command (see "Embedded: PBI 4-part anatomy" and "Embedded: RICCO").
 
 ## Pre-flight Checklist
 - [ ] MCP status validation performed (see `mcp-status.md`)
@@ -268,7 +289,7 @@ Execute the refine-task workflow to improve a task by validating PBI structure, 
 **Example 1: Task with Complete PBI Structure**
 
 ```
-Input: /refine-task FB-123
+Input: /refine-task FB-123  (or /refine-task FB-123 --ricco to include RICCO)
 
 Task: "Add user authentication"
 PBI Structure: ✅ Complete (all 4 parts present)
@@ -340,6 +361,24 @@ Output:
 - Task refined and ready for human refinement meeting
 ```
 
+**Example 5: Optional RICCO include**
+
+```
+Input: /refine-task FB-127 --ricco
+
+Task: "Add rate limiting to API gateway"
+PBI Structure: ✅ Complete
+Feature Domain: api-gateway
+Spec Existence: ✅ Found
+
+Output:
+- ✅ PBI structure validated
+- ✅ Spec found and links validated
+- RICCO section included (Role, Intent, Context, Constraints, Output) from embedded structure
+- Enhanced description; RICCO populated from task for agent consumption
+- Task refined and ready for human refinement meeting
+```
+
 ### Constraints
 
 **Rules (Must Follow):**
@@ -357,10 +396,12 @@ Output:
 8. **Conservative Refinement**: Only add missing critical details. Do NOT rewrite or restructure existing content unnecessarily.
 9. **Fluff Removal**: Identify and remove verbose or redundant content. Focus on essential information only.
 10. **Content Organization**: Ensure content is well-organized with clear headings, bullet points, and scannable structure.
+11. **RICCO optional**: PBI is default. When `--ricco` is used, include embedded RICCO structure; RICCO is an include, not a format swap.
 
 **Existing Standards (Reference):**
 - MCP status validation: See `mcp-status.md` for detailed MCP server connection checks
-- PBI structure: 4-part anatomy per `templates/pbi-template.md` and ASDLC patterns
+- PBI structure: 4-part anatomy embedded in this command; ASDLC patterns
+- RICCO: Embedded in this command when `--ricco` is used
 - Task refinement: Conservative approach (preserve existing, enhance minimally)
 - Spec location: `specs/{feature-domain}/spec.md` for permanent context
 
@@ -374,6 +415,7 @@ Output:
    - PBI structure validation (complete, partial, or missing with guidance)
    - Feature domain and spec existence (domain detected, spec found/missing, links validated)
    - Clarity improvements (description enhancements, AC improvements, fluff removal, content organization)
+   - RICCO include (if `--ricco` was used): note that RICCO section was added
    - Next steps (if PBI structure incomplete or spec missing)
 
 The refinement should ensure tasks meet Definition of Ready criteria with clean, well-organized, scannable content that is ready for human refinement meetings. Tasks should follow PBI 4-part anatomy when possible, but graceful degradation allows refinement of tasks without PBI structure.
