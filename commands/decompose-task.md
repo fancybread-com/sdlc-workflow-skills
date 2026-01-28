@@ -98,6 +98,20 @@ Before proceeding, verify:
 /decompose-task TASK-123
 ```
 
+---
+
+## Embedded: PBI 4-part anatomy
+
+Use this structure when generating subtask descriptions (Stories/Epics). Populate from parent task and inherited `{feature-domain}`; link to `specs/{feature-domain}/spec.md`. Same spec as parent.
+
+**1. Directive** — What to do for this subtask; explicit scope (narrower than parent). Scope: in/out; Constraints; dependencies on other subtasks.
+
+**2. Context Pointer** — See `specs/{feature-domain}/spec.md#blueprint`. Same spec as parent; subtask-specific scope.
+
+**3. Verification Pointer** — See `specs/{feature-domain}/spec.md#contract`. Reference parent's Contract.
+
+**4. Refinement Rule** — Same as parent: if implementation diverges from Spec, STOP / update spec same commit / flag review if architectural boundaries affected.
+
 **Examples:**
 - `/decompose-task PROJ-100` (epic)
 - `/decompose-task STORY-50` (large story)
@@ -212,7 +226,7 @@ Before proceeding, verify:
      - For user stories: "As a [user], I want [goal], so that [benefit]" format
      - For technical tasks: Use clear action-oriented descriptions
    - **Generate subtask descriptions with PBI structure** (for Stories and Epics):
-     - **Read PBI template:** Use `read_file` to read `templates/pbi-template.md`
+     - **Use the embedded PBI 4-part anatomy** (see "Embedded: PBI 4-part anatomy" in this command).
      - **For each subtask, populate 4-part anatomy:**
        1. **Directive Section:**
           - Specific scope for this subtask (narrower than parent)
@@ -227,8 +241,7 @@ Before proceeding, verify:
           - Generate link: `../../specs/{feature-domain}/spec.md#contract`
           - Reference parent's Contract for overall goals
        4. **Refinement Rule Section:**
-          - Use standard protocol from template
-          - Same as parent's refinement rule
+          - Use embedded Refinement Rule; same as parent's refinement rule
      - **Validate PBI structure for each subtask:**
        - Verify all 4 sections present
        - Verify feature domain matches parent
@@ -383,11 +396,10 @@ Before proceeding, verify:
   - Use to identify related code or technical dependencies
 
 ### Filesystem Tools
-- `read_file` - Read PBI template and related documentation
-  - Read PBI template: `templates/pbi-template.md`
+- `read_file` - Read plan files or external docs referenced in task
   - Read plan files if referenced in task
   - Parameters: `target_file` = path to document
-  - Use to read PBI template for subtask description generation
+  - PBI structure is embedded in this command (see "Embedded: PBI 4-part anatomy").
   - Use when task references external documentation or plan files
 - `glob_file_search` - Search for specs
   - Find specs: Pattern `**/specs/{feature-domain}/spec.md`
@@ -578,7 +590,7 @@ Breakdown documented in STORY-50 comments.
 11. **Feature Domain Inheritance**: Extract feature domain from parent task (from labels, description, or epic). All subtasks must inherit same domain.
 12. **PBI Structure for Subtasks** (Stories/Epics): Generate subtask descriptions with ASDLC PBI 4-part anatomy (Directive, Context Pointer, Verification Pointer, Refinement Rule).
 13. **Spec Reference Consistency**: All subtasks must reference the same spec as parent (`specs/{feature-domain}/spec.md`).
-14. **PBI Template Usage**: Read `templates/pbi-template.md` and populate for each subtask.
+14. **PBI structure** (Stories/Epics): Use the embedded PBI 4-part anatomy in this command; populate for each subtask.
 15. **Feature Label Inheritance**: Add label `feature:{domain}` to all subtasks (inherited from parent).
 
 **Existing Standards (Reference):**
@@ -586,7 +598,7 @@ Breakdown documented in STORY-50 comments.
 - Task creation patterns: See `create-task.md` for task creation workflows and validation patterns
 - User story format: "As a [user], I want [goal], so that [benefit]"
 - Subtask criteria: Defined in Definitions section above
-- PBI Template: See `templates/pbi-template.md` for 4-part anatomy structure
+- PBI structure: Embedded in this command ("Embedded: PBI 4-part anatomy")
 - Spec Structure: See `specs/README.md` for Blueprint + Contract format
 - ASDLC Patterns: The PBI (4-part anatomy), The Spec (permanent pointer target)
 

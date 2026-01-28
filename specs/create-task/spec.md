@@ -19,7 +19,7 @@ Teams need to create well-formed work items (epic, story, bug, task, etc.) in Ji
 - **Inputs**: `[type]` and description or source: e.g. `story for user auth`, `--type=bug login fails`, `epic from .plans/phase-one.md`. Types: epic, story, bug, task, subtask, improvement, spike, technical-debt. For Jira: `cloudId` from `getAccessibleAtlassianResources`; `projectKey`, `issueTypeName` from project metadata.
 - **Flow**: (1) MCP and tracker access validation; (2) parse type and description/source; (3) gather context (plan file, parent); (3a) for story/epic: determine `{FEATURE_DOMAIN}` (kebab-case), check `specs/{FEATURE_DOMAIN}/spec.md`; (4) validate information density (type-specific); if INSUFFICIENT, STOP and ask 3–5 questions; (5) run type-specific workflow, generate title/description (PBI for story/epic when applicable); (6) create via `mcp_atlassian_createJiraIssue` or `mcp_github_create_issue`; (7) verify and return key/link. Created issues are left unassigned in "To Do".
 - **MCP**: Atlassian (getAccessibleAtlassianResources, getJiraIssue, getJiraProjectIssueTypesMetadata, createJiraIssue), GitHub (issue_read, create_issue).
-- **Dependencies**: Issue tracker, `specs/`, `templates/pbi-template.md`, `.plans/` or `.cursor/plans/`. **Outbound**: Created issues are picked up by `/start-task`, `/decompose-task`, `/refine-task`.
+- **Dependencies**: Issue tracker, `specs/`, `.plans/` or `.cursor/plans/`. PBI structure is embedded in `create-task`. **Outbound**: Created issues are picked up by `/start-task`, `/decompose-task`, `/refine-task`.
 
 ### Anti-Patterns
 
