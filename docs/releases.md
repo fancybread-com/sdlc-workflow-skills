@@ -10,13 +10,17 @@ All releases of the Agent Command Library commands library.
 
 ## Latest Release
 
-## [v1.1.4](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) - 2026-01-31
+## [v1.1.5](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5) - 2026-02-01
 
-[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4)
+[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5)
 
 ---
 
 ## Release History
+
+## [v1.1.5](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5) - 2026-02-01
+
+[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.5)
 
 ## [v1.1.4](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) - 2026-01-31
 
