@@ -6,7 +6,7 @@ title: Commands Reference
 
 **Commands for AI-assisted development.**
 
-The canonical command definitions (the markdown files Cursor executes) live in **`commands/`** at the repo root; those files are the source of truth. This documentation describes what each command does. For full instruction content, see the [repository `commands/` folder](https://github.com/fancybread-com/agentic-software-development/tree/main/commands). Command files are plain markdown with structured sections; validate with `python schemas/validate.py commands/<name>.md` (see [schemas/README](https://github.com/fancybread-com/agentic-software-development/blob/main/schemas/README.md)).
+The canonical command definitions (the markdown files Cursor executes) live in **`commands/`** at the repo root; those files are the source of truth. This documentation describes what each command does. For full instruction content, see the [repository `commands/` folder](https://github.com/fancybread-com/agent-command-library/tree/main/commands). Command files are plain markdown with structured sections; validate with `python schemas/validate.py commands/<name>.md` (see [schemas/README](https://github.com/fancybread-com/agent-command-library/blob/main/schemas/README.md)).
 
 [:octicons-zap-24: Quick Reference](quick-reference.md){ .md-button }
 

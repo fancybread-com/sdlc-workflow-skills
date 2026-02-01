@@ -62,7 +62,7 @@ Cursor Settings → Features → Model Context Protocol → Connect
 
 ---
 
-**[View full command (source)](https://github.com/fancybread-com/agentic-software-development/blob/main/commands/mcp-status.md)**
+**[View full command (source)](https://github.com/fancybread-com/agent-command-library/blob/main/commands/mcp-status.md)**
 
 ---
 

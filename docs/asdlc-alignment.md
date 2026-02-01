@@ -4,7 +4,7 @@ This document provides explicit traceability from commands to ASDLC patterns and
 
 ## Overview
 
-The commands in this project implement ASDLC (Agentic Software Development Lifecycle) patterns and pillars. Each command serves as a specialized station in a Factory Architecture, uses Standardized Parts (schema-enforced structure), and implements Quality Control (validation gates).
+The commands in this project implement ASDLC (Agent Command Library Lifecycle) patterns and pillars. Each command serves as a specialized station in a Factory Architecture, uses Standardized Parts (schema-enforced structure), and implements Quality Control (validation gates).
 
 ## Command Mapping
 
@@ -62,7 +62,7 @@ The command mapping table above shows which patterns each command implements. Ke
 
 - [Commands Reference](commands/index.md) - Detailed documentation for each command
 - [Getting Started](getting-started.md) - Setup and usage guide
-- [AGENTS.md](https://github.com/fancybread-com/agentic-software-development/blob/main/AGENTS.md) - Agent Constitution and operational boundaries
+- [AGENTS.md](https://github.com/fancybread-com/agent-command-library/blob/main/AGENTS.md) - Agent Constitution and operational boundaries
 
 ## External Resources
 
