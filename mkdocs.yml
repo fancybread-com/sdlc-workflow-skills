@@ -1,10 +1,10 @@
-site_name: Agentic Software Development
+site_name: Agent Command Library
 site_description: Development methodology for Cursor IDE + Jira + GitHub with AI workflow automation
 site_author: Paul
-site_url: https://github.com/fancybread-com/agentic-software-development
+site_url: https://github.com/fancybread-com/agent-command-library
 
-repo_name: agentic-software-development
-repo_url: https://github.com/fancybread-com/agentic-software-development
+repo_name: agent-command-library
+repo_url: https://github.com/fancybread-com/agent-command-library
 edit_uri: edit/main/docs/
 
 theme:
@@ -155,7 +155,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/fancybread-com/agentic-software-development
+      link: https://github.com/fancybread-com/agent-command-library
       name: GitHub Repository
 
 # Copyright

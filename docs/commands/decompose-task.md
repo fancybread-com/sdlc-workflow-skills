@@ -136,5 +136,5 @@ Use `/decompose-task` when:
 
 ---
 
-**[View full command (source)](https://github.com/fancybread-com/agentic-software-development/blob/main/commands/decompose-task.md)**
+**[View full command (source)](https://github.com/fancybread-com/agent-command-library/blob/main/commands/decompose-task.md)**
 

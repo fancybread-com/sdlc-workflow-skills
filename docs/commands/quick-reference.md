@@ -13,7 +13,7 @@ title: Quick Reference
 ## Command Organization
 
 ```
-agentic-software-development/
+agent-command-library/
 ├── Product
 │   ├── /create-task
 │   └── /decompose-task

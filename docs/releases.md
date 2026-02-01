@@ -4,47 +4,47 @@ title: Releases
 
 # Releases
 
-All releases of the Agentic Software Development commands library.
+All releases of the Agent Command Library commands library.
 
 ---
 
 ## Latest Release
 
-## [v1.1.4](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4) - 2026-01-31
+## [v1.1.4](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) - 2026-01-31
 
-[**Download**](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4) | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4)
+[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4)
 
 ---
 
 ## Release History
 
-## [v1.1.4](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4) - 2026-01-31
+## [v1.1.4](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) - 2026-01-31
 
-[**Download**](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4) | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.4)
+[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.4)
 
-## [v1.1.3](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.3) - 2026-01-28
+## [v1.1.3](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.3) - 2026-01-28
 
-[**Download**](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.3) | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.3)
+[**Download**](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.3) | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.3)
 
-## [v1.1.2](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.2) - 2026-01-28
+## [v1.1.2](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.2) - 2026-01-28
 
-**[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.2)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.2)
+**[Download](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.2)** | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.2)
 
-## [v1.1.1](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.1) - 2026-01-27
+## [v1.1.1](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.1) - 2026-01-27
 
-**[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.1)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.1)
+**[Download](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.1)** | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.1)
 
-## [v1.1.0](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.0) - 2026-01-25
+## [v1.1.0](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.0) - 2026-01-25
 
-**[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.0)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.1.0)
+**[Download](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.0)** | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.1.0)
 
-## [v1.0.1](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.1) - 2025-12-22
+## [v1.0.1](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.1) - 2025-12-22
 
-**[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.1)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.1)
+**[Download](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.1)** | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.1)
 
-## [v1.0.0](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0) - 2025-12-22
+## [v1.0.0](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.0) - 2025-12-22
 
-**[Download](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0)** | [Release Notes](https://github.com/fancybread-com/agentic-software-development/releases/tag/v1.0.0)
+**[Download](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.0)** | [Release Notes](https://github.com/fancybread-com/agent-command-library/releases/tag/v1.0.0)
 
 ---
 
@@ -54,7 +54,7 @@ Releases include command files packaged as:
 - **`.tar.gz`** - For Unix/Linux/macOS
 - **`.zip`** - For Windows
 
-Download the latest release from the [GitHub Releases page](https://github.com/fancybread-com/agentic-software-development/releases).
+Download the latest release from the [GitHub Releases page](https://github.com/fancybread-com/agent-command-library/releases).
 
 ---
 
@@ -83,4 +83,4 @@ See the [Getting Started guide](getting-started.md) for detailed setup instructi
 
 ## Changelog
 
-For detailed changes in each release, see the [GitHub Releases](https://github.com/fancybread-com/agentic-software-development/releases) page.
+For detailed changes in each release, see the [GitHub Releases](https://github.com/fancybread-com/agent-command-library/releases) page.

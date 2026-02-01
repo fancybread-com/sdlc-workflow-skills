@@ -75,12 +75,12 @@ hide:
 </style>
 
 <div class="hero">
-  <h1>Agentic Software Development</h1>
+  <h1>Agent Command Library</h1>
   <p>Standardize your SDLC with natural language commands. Built for Cursor IDE and MCP tools. Works with Jira, Azure DevOps, and GitHub.</p>
   <p>
     <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
     <a href="commands/" class="md-button">View Commands</a>
-    <a href="https://github.com/fancybread-com/agentic-software-development" class="md-button">GitHub</a>
+    <a href="https://github.com/fancybread-com/agent-command-library" class="md-button">GitHub</a>
   </p>
 </div>
 

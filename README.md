@@ -1,9 +1,9 @@
-# Agentic Software Development
+# Agent Command Library
 
 **Standardize SDLC operations with natural language commands for Cursor IDE.**
 
-[![Documentation](https://img.shields.io/badge/docs-live-blue)](https://fancybread-com.github.io/agentic-software-development)
-[![Schema Validation](https://github.com/fancybread-com/agentic-software-development/actions/workflows/command-validation.yml/badge.svg)](https://github.com/fancybread-com/agentic-software-development/actions/workflows/command-validation.yml)
+[![Documentation](https://img.shields.io/badge/docs-live-blue)](https://fancybread-com.github.io/agent-command-library)
+[![Schema Validation](https://github.com/fancybread-com/agent-command-library/actions/workflows/command-validation.yml/badge.svg)](https://github.com/fancybread-com/agent-command-library/actions/workflows/command-validation.yml)
 [![ASDLC](https://img.shields.io/badge/ASDLC-aligned-5e35b1)](https://asdlc.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -59,7 +59,7 @@ cp -r commands/* ~/.cursor/commands/
 /complete-task PROJ-123
 ```
 
-[Full setup guide →](https://fancybread-com.github.io/agentic-software-development/getting-started/) | [Try a Development Workflow →](https://fancybread-com.github.io/agentic-software-development/getting-started/#try-a-development-workflow)
+[Full setup guide →](https://fancybread-com.github.io/agent-command-library/getting-started/) | [Try a Development Workflow →](https://fancybread-com.github.io/agent-command-library/getting-started/#try-a-development-workflow)
 
 ---
 
@@ -71,7 +71,7 @@ cp -r commands/* ~/.cursor/commands/
 - **Quality (2):** `/create-test`, `/review-code`
 - **Utilities (1):** `/mcp-status`
 
-[View all commands →](https://fancybread-com.github.io/agentic-software-development/commands/)
+[View all commands →](https://fancybread-com.github.io/agent-command-library/commands/)
 
 ---
 
@@ -79,17 +79,17 @@ cp -r commands/* ~/.cursor/commands/
 
 Commands connect you to AI agents that interact with Jira, GitHub, and your codebase. The AI reads your project context and executes operations consistently across projects.
 
-[Full explanation →](https://fancybread-com.github.io/agentic-software-development/#how-it-works)
+[Full explanation →](https://fancybread-com.github.io/agent-command-library/#how-it-works)
 
 ---
 
 ## Documentation
 
-📚 **[Full Documentation](https://fancybread-com.github.io/agentic-software-development)**
+📚 **[Full Documentation](https://fancybread-com.github.io/agent-command-library)**
 
-- [Getting Started](https://fancybread-com.github.io/agentic-software-development/getting-started/) - 3-step setup
-- [Commands Reference](https://fancybread-com.github.io/agentic-software-development/commands/) - All commands
-- [Methodology](https://fancybread-com.github.io/agentic-software-development/getting-started/#how-it-works) - Core principles
+- [Getting Started](https://fancybread-com.github.io/agent-command-library/getting-started/) - 3-step setup
+- [Commands Reference](https://fancybread-com.github.io/agent-command-library/commands/) - All commands
+- [Methodology](https://fancybread-com.github.io/agent-command-library/getting-started/#how-it-works) - Core principles
 
 ---
 

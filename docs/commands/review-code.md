@@ -57,7 +57,7 @@ AI (Critic): Validating against Spec Contract and Constitution...
 
 ## Full command (source)
 
-[commands/review-code.md](https://github.com/fancybread-com/agentic-software-development/blob/main/commands/review-code.md)
+[commands/review-code.md](https://github.com/fancybread-com/agent-command-library/blob/main/commands/review-code.md)
 
 ## Related Commands
 

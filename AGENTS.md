@@ -446,7 +446,7 @@ This section captures accumulated wisdom from implementation experience. Update 
 
 **AGENTS.md Version:** 1.0.0
 **Created:** 2026-01-17
-**Project:** Agentic Software Development (agentic-software-development)
+**Project:** Agent Command Library (agent-command-library)
 **ASDLC Compliance:** This file implements the [agents-md-spec](https://asdlc.io/practices/agents-md-spec) and [agent-constitution](https://asdlc.io/patterns/agent-constitution) patterns.
 
 ---

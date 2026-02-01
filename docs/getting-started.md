@@ -81,7 +81,7 @@ Command files live in **`commands/`** (in the repo or in the release archive). D
 
 1. Download the latest release from the [Releases page](releases.md)
 2. Extract the archive
-3. Copy `commands/*` to `~/.cursor/commands/` (global) or `.cursor/commands/` (per-project). **Cursor Team/Enterprise:** [Dashboard → Team Content → Commands](https://cursor.com/dashboard?tab=team-content&section=commands) — create team commands from `commands/`; they sync to your team.
+3. Copy `commands/*` to `~/.cursor/commands/` (global) or `.cursor/commands/` (per-project). **Cursor Team/Enterprise:** Use Dashboard → Team Content → Commands to create team commands from `commands/`; they sync to your team.
 4. Restart Cursor
 
 ---

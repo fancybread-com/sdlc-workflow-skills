@@ -58,7 +58,7 @@ AI:
 
 ## Full command (source)
 
-[commands/create-test.md](https://github.com/fancybread-com/agentic-software-development/blob/main/commands/create-test.md)
+[commands/create-test.md](https://github.com/fancybread-com/agent-command-library/blob/main/commands/create-test.md)
 
 ## Related Commands
 
