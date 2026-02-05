@@ -10,13 +10,17 @@ All releases of the SDLC Workflow Skills (SDLC workflow skills).
 
 ## Latest Release
 
-## [v1.1.5](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v1.1.5) - 2026-02-01
+## [v2.0.0](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0) - 2026-02-05
 
-[**Download**](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v1.1.5) | [Release Notes](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v1.1.5)
+[**Download**](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0) | [Release Notes](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0)
 
 ---
 
 ## Release History
+
+## [v2.0.0](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0) - 2026-02-05
+
+[**Download**](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0) | [Release Notes](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v2.0.0)
 
 ## [v1.1.5](https://github.com/fancybread-com/sdlc-workflow-skills/releases/tag/v1.1.5) - 2026-02-01
 
