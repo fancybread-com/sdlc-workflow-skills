@@ -11,7 +11,7 @@
 
 ## What This Is
 
-SDLC Workflow Skills provides **SDLC workflow skills**—skills in [Agent Skills](https://cursor.com/docs/agent/skills) format that implement [ASDLC](https://asdlc.io/) workflows. They work in any environment that supports Agent Skills (including Cursor IDE) and across teams and projects.
+SDLC Workflow Skills provides **SDLC workflow skills**—skills in [Agent Skills](https://cursor.com/docs/context/skills) format that implement [ASDLC](https://asdlc.io/) workflows. They work in any environment that supports Agent Skills (including Cursor IDE) and across teams and projects.
 
 Built on ASDLC principles: Factory Architecture (specialized command stations), Standardized Parts (schema-enforced structure), and Quality Control (automated gates). See [ASDLC Alignment](docs/asdlc-alignment.md) for pattern mapping.
 
