@@ -387,7 +387,7 @@ For any other task type (e.g., "subtask", "improvement", "spike", etc.), the com
    - **Validate feature domain format:**
      - Must be kebab-case (lowercase with hyphens)
      - Pattern: `[a-z]+(-[a-z]+)*`
-     - Examples: `user-authentication`, `payment-processing`, `command-audit`
+     - Examples: `user-authentication`, `payment-processing`, `skill-audit`
      - **If invalid format, STOP and report: "Feature domain must be kebab-case (e.g., user-authentication)"**
    - **Check if spec exists:**
      - Use `glob_file_search` with pattern: `**/specs/{feature-domain}/spec.md`

@@ -18,7 +18,7 @@ Perform adversarial AI-assisted code review on a pull request or branch changes 
 - **{BRANCH_NAME}**: Branch name to review (e.g., `feat/FB-12`, `main`, `develop`)
   - Can be local branch or remote branch
   - Format: `{type}/{TASK_KEY}` for feature branches (consistent with other commands)
-- **{FEATURE_DOMAIN}**: Kebab-case feature name for Spec lookup (e.g., `user-authentication`, `command-audit`)
+- **{FEATURE_DOMAIN}**: Kebab-case feature name for Spec lookup (e.g., `user-authentication`, `skill-audit`)
   - Determines which Spec to read from `specs/{FEATURE_DOMAIN}/spec.md`
   - May be extracted from branch name, PR title, or Jira issue context
 - **PR (Pull Request)**: A GitHub pull request containing proposed changes to merge into a branch
