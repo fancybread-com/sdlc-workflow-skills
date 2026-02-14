@@ -47,7 +47,7 @@ Code changes need review against both the **Spec** (functional contract) and the
 ### Scenarios
 
 **Scenario: PR reviewed — PASS**
-- **Given**: PR #12 for `feat/FB-39`, `specs/command-audit/spec.md` exists, diff has no Tier 3 or Spec CRITICAL violations
+- **Given**: PR #12 for `feat/FB-39`, `specs/skill-audit/spec.md` exists, diff has no Tier 3 or Spec CRITICAL violations
 - **When**: The user runs `/review-code #12`
 - **Then**: Builder retrieves diff and spec and Constitution; Critic returns PASS and a report with no blocking violations.
 
